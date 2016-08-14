@@ -1,0 +1,104 @@
+{# Dywee\OrderBundle\Resources\View\Basket\shipping-home.html.twig #}
+
+{% form_theme tierce 'bootstrap_3_layout.html.twig' %}
+
+{{ form_start(tierce) }}
+
+{{ form_errors(tierce) }}
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="form-group">
+            {{ form_label(tierce.lastName, 'Nom') }}
+            {{ form_errors(tierce.lastName) }}
+            {{ form_widget(tierce.lastName, {"attr": {"placeholder": "Nom" }}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.firstName, "Prénom") }}
+            {{ form_errors(tierce.firstName) }}
+            {{ form_widget(tierce.firstName, {"attr": {"placeholder": "Prénom"}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.companyName, "Nom de l\'entreprise (facultatif)") }}
+            {{ form_errors(tierce.companyName) }}
+            {{ form_widget(tierce.companyName, {"attr": {"placeholder": "Nom de l\'entreprise (facultatif)" }}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.email.first) }}
+            {{ form_errors(tierce.email.first) }}
+            {{ form_widget(tierce.email.first, {"attr": {"placeholder": "Adresse e-mail" }}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.email.second) }}
+            {{ form_errors(tierce.email.second) }}
+            {{ form_widget(tierce.email.second, {"attr": {"placeholder": "Adresse e-mail" }}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ form_label(tierce.mobile, "Mobile (avec l'indicatif de pays)") }}
+            {{ form_errors(tierce.mobile) }}
+            {{ form_widget(tierce.mobile, {"attr": {"placeholder": "Mobile"}}) }}
+            <p class="help-block">Exemple: +32 478 69 45</p>
+        </div>
+        <div class="form-group">
+            {{ form_label(tierce.address1, "Adresse") }}
+            {{ form_errors(tierce.address1) }}
+            {{ form_widget(tierce.address1, {"attr": {"placeholder": "Adresse" }}) }}
+        </div>
+    </div>
+    <div class="col-md-6 well well-sm">
+        <p>Si votre numéro de téléphone est pour la France<br> le 06 35 93 25 25<br>
+            Veuillez le renseigner comme: +33635932525</p>
+        <p>Si votre numéro de téléphone est pour la Belgique<br> le 0498 51 18 83<br>
+            Veuillez le renseigner comme: +32498511883</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+
+
+
+        <div class="form-group">
+            {{ form_label(tierce.zip, "Code postal") }}
+            {{ form_errors(tierce.zip) }}
+            {{ form_widget(tierce.zip, {"attr": {"placeholder": "Code postal" }}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.cityString, "Ville") }}
+            {{ form_errors(tierce.cityString) }}
+            {{ form_widget(tierce.cityString, {"attr": {"placeholder": "Ville" }}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(tierce.country, "Pays") }}
+            {{ form_errors(tierce.country) }}
+            {{ form_widget(tierce.country, {"attr": {"placeholder": "Pays" }}) }}
+        </div>
+
+    </div>
+</div>
+
+    {{ form_label(tierce.shippingMessage, "Message pour le destinataire") }}
+    {{ form_errors(tierce.shippingMessage) }}
+    {{ form_widget(tierce.shippingMessage) }}
+    <p class="help-block">Vous pouvez adresser un message personnel à votre destinataire.<br>
+        Il sera retranscrit sur une carte personnalisée et ajouté à votre colis.</p>
+
+<div class="col-md-6">
+    {{ form_widget(tierce.save, {'attr': {'class': 'btn btn-success'}, 'label': "Suivant" }) }}
+</div>
+
+
+
+{{ form_rest(tierce) }}
+
+{{ form_end(tierce) }}

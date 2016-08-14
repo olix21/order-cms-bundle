@@ -1,0 +1,133 @@
+{# Dywee\OrderBundle\Resources\View\Basket\recap.html.twig #}
+
+{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+
+{% block metaTitle %}
+    {{ 'Recapitulatif de votre commande'|trans }} {{ parent() }}
+{% endblock %}
+
+{% set current_checkout_step = 4 %}
+
+{% block body %}
+
+    <div class="spacer"></div>
+
+    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+
+    <h1>{{ 'checkout.recap'|trans }}</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{ 'Récapitulatif de la commande'|trans }} - <small>ref: {{ order.reference }}</small></h3></div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>{{ 'checkout.table.product'|trans|capitalize }}</th>
+                <th>{{ 'checkout.table.unit_price'|trans|capitalize }}</th>
+                <th>{{ 'checkout.table.quantity'|trans|capitalize }}</th>
+                <th>{{ 'checkout.table.total'|trans|capitalize }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for orderElement in order.orderElements %}
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-xs-2">
+                                {% set picture = orderElement.product.pictures|first %}
+                                <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                            </div>
+                            <div class="col-xs-9">
+                                {{ orderElement.product.name }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                    <td>{{ orderElement.quantity }}</td>
+                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                </tr>
+            {% endfor %}
+            <tr class="active">
+                <td colspan="3">{{ 'checkout.total_vat_excl'|trans|capitalize }}</td>
+                <td colspan="2">{{ order.priceVatExcl|number_format(2) }}€</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ 'checkout.vat'|trans|capitalize }}</td>
+                <td colspan="2">{{ order.vatPrice|number_format(2) }}€ ({{ order.vatRate|number_format(2) }}%)</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ 'checkout.shipping_fee_vat'|trans|capitalize }}</td>
+                <td colspan="2">{{ order.deliveryCost|number_format(2) }}€</td>
+            </tr>
+            <tr class="success">
+                <td colspan="3">{{ 'checkout.total_vat'|trans|capitalize }}</td>
+                <td colspan="2">{{ order.totalPrice|number_format(2) }}€</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.wizard.billing'|trans|capitalize }}</h3></div>
+                <div class="panel-body">
+                    {% set address = order.billingAddress %}
+                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                </div>
+            </div></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.wizard.shipping'|trans|capitalize }}</h3></div>
+                <div class="panel-body">
+                    {% set address = order.shippingAddress %}
+                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                </div>
+            </div></div>
+        {% if not order.shippingMessage == '' %}
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.shipping_message'|trans }}</h3></div>
+                <div class="panel-body">
+                    {{ order.shippingMessage }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-md-12">
+            <div class="panel panel-default" id="payment">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'Choix du paiement'|trans }}</h3></div>
+                <div class="panel-body">
+                    {{ dump(order) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showWaitingWheel(link)
+        {
+            $(link).html('<i class="fa fa-spin fa-spinner"></i> Vous allez être redirigé vers paypal pour votre paiement. Veuillez patienter...');
+        }
+        $(document).ready(function(){
+            var request = $.ajax({
+                url: '#'{#{{ path('dywee_paypal_ajax') }}'#},
+                type: 'post',
+                dataType: 'json',
+                success: function(data, textStatus, jqXHR){
+                    if(data.type == 'success') {
+                        $("#paypalLink").attr('src', data.url).removeClass("hide");
+                        $("#paypalLink2").attr('src', data.url).removeClass("hide");
+                        $("#firstSpinner").addClass("hide");
+                    }
+                    else {
+                        alert(data.text);
+                    }
+                }
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                ('#log').html('Request failed: ' + textStatus);
+            });
+
+        });
+
+    </script>
+{% endblock %}

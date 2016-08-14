@@ -1,0 +1,64 @@
+services:
+
+    ##############  SIDEBAR   #################
+
+    dywee_order_cms.sidebar_handler:
+        class: Dywee\OrderCMSBundle\Service\OrderCMSAdminSidebarHandler
+        arguments: [ '@router' ]
+
+    dywee_order_cms.admin_sidebar_listener:
+        class: Dywee\OrderCMSBundle\Listener\AdminSidebarBuilderListener
+        arguments: [ '@dywee_order_cms.sidebar_handler' ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+
+
+    dywee_order_cms.order_session_handler:
+        class: Dywee\OrderCMSBundle\Service\SessionOrderHandler
+        arguments: [ '@doctrine.orm.entity_manager', '@session']
+
+
+    dywee_order_cms.admin_sidebar_listener:
+            class: Dywee\OrderCMSBundle\Listener\PageListener
+            arguments: [ '@dywee_order_cms.page_data_handler' ]
+            tags:
+                - { name: kernel.event_subscriber }
+
+    dywee_order_cms.page_data_handler:
+        class: Dywee\OrderCMSBundle\Service\PageDataHandler
+        arguments: [ '@dywee_order_cms.order_session_handler' ]
+
+
+    ######   PLUGINS BOX  #########
+
+    dywee_order_cms.plugin_box_handler:
+        class: Dywee\OrderCMSBundle\Service\PageElementModalHandler
+        arguments: [  ]
+
+    dywee_order_cms.plugin_box_listener:
+        class: Dywee\OrderCMSBundle\Listener\PageElementModalListener
+        arguments: [ '@dywee_order_cms.plugin_box_handler' ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    ####################################################
+    #                                                  #
+    #                       STAT                       #
+    #                                                  #
+    ####################################################
+
+
+    dywee_order_cms.session_manager:
+        class: Dywee\OrderCMSBundle\Service\SessionStatManager
+        arguments: [ '@session' ]
+
+    dywee_order_cms.stat_manager:
+        class: Dywee\OrderCMSBundle\Service\OrderStatManager
+        arguments: [ '@doctrine.orm.entity_manager', '@dywee_order_cms.session_manager' ]
+
+    dywee_order_cms.stat_listener:
+        class: Dywee\OrderCMSBundle\Listener\CheckoutStatListener
+        arguments: [ '@dywee_order_cms.stat_manager' ]
+        tags:
+            - { name: kernel.event_subscriber }

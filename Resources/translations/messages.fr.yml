@@ -1,0 +1,22 @@
+checkout:
+    wizard:
+        card: 'panier'
+        billing: 'facturation'
+        shipping: 'livraison'
+        review: 'recapitulatif'
+
+    table:
+        product: 'produits'
+        unit_price: 'prix unitaire'
+        quantity: 'quantité'
+        total: 'total'
+
+    total_vat_excl: 'total HTVA'
+    vat: 'TVA'
+    shipping_fee_vat: 'frais de livraison (TTC)'
+    shipping_fee_vat_excl: 'frais de livraison (HTVA)'
+    total_vat: 'total TTC'
+
+    recap: 'Récapitulatif de votre commande'
+    contains: 'Votre panier contient x produits'
+    shipping_message: 'Message pour la livraison'

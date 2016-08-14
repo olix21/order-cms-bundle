@@ -1,0 +1,11 @@
+{# Dywee\OrderCMSBundle\Resources\View\layout.html.twig #}
+
+{% extends "::layout.html.twig" %}
+
+{% block metaTitle %}
+     {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+     <link href="{{ asset('bundles/dyweecore/plugins/wizard/css/style.css') }}" rel="stylesheet">
+{% endblock %}

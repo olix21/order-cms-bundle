@@ -1,0 +1,31 @@
+{% set checkout_steps = [
+    {label: 'checkout.wizard.card', url: 'basket_view'},
+    {label: 'checkout.wizard.billing', url: 'checkout_billing'},
+    {label: 'checkout.wizard.shipping', url: 'checkout_shipping'},
+    {label: 'checkout.wizard.review', url: 'checkout_overview'}
+] %}
+<nav>
+    <ol class="cd-multi-steps text-bottom count">
+        {% for checkout_step in checkout_steps %}
+            <li{% if loop.index < current_checkout_step %}
+                    class="visited"
+                {% elseif loop.index == current_checkout_step %}
+                    class="current"
+                {% endif %}>
+
+                {% if loop.index - 1 < current_checkout_step %}
+                    <a href="{{ path(checkout_step['url']) }}">
+                {% else %}
+                    <a href="javascript:void(0)">
+                {% endif %}
+
+                    {% if loop.index-1 >= current_checkout_step %}
+                    <em>{{ checkout_step['label']|trans|capitalize }}</em>
+                    {% else %}
+                        {{ checkout_step['label']|trans|capitalize }}
+                    {% endif %}
+
+                </a></li>
+        {% endfor %}
+    </ol>
+</nav>

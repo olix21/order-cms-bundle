@@ -1,0 +1,61 @@
+{# Dywee\OrderBundle\Resources\View\Basket\shipping-mr.html.twig #}
+
+{% form_theme mr 'bootstrap_3_layout.html.twig' %}
+
+{{ form_start(mr) }}
+
+<div id="24RSettings">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                {{ form_widget(mr.country) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(mr.zip, "Code postal de la ville de livraison") }}
+                {{ form_widget(mr.zip, {"attr": {"placeholder": 'Code postal'}}) }}
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-success" onClick="initMR()">{{ 'Chercher un point relais'|trans }}</button>
+</div>
+
+<div id="MondialRelayWidget" class="hide">
+    <div id="Zone_Widget"><i class="fa fa-spinner fa-spin"></i> </div>
+    {{ form_widget(mr.ref, {"attr": {"id": "Retour_Widget"}}) }}
+    <textarea name="mondialRelayCompleteRef" id="Retour_Widget2" class="hide" ></textarea>
+    {{ form_widget(mr.mrSave, {'attr': {'class': 'btn btn-success'}, 'label': 'Valider ce point relais' }) }}
+</div>
+
+{{ form_rest(mr) }}
+
+{{ form_end(mr) }}
+
+<script>
+    function initMR(){
+        $("#MondialRelayWidget").removeClass('hide');
+        $("#24RSettings").addClass('hide');
+        var country = 0;
+        switch(parseInt($("#form_country").val()))
+        {
+            case 1: country = 'FR'; break;
+            case 2: country = 'BE'; break;
+            case 3: country = 'LU'; break;
+            case 4: country = 'ES'; break;
+            case 5: country = 'DE'; break;
+            case 6: country = 'UK'; break;
+            case 7: country = 'PT'; break;
+            case 8: country = 'NL'; break;
+            case 9: country = 'CHE'; break;
+        }
+        console.log(country);
+        $("#Zone_Widget").MR_ParcelShopPicker({
+            Target: "#form_ref",
+            TargetDisplayInfoPR: "#Retour_Widget2",
+            Brand: "BEBLCBLC",  // votre code client
+            Country: country,
+            PostCode: $("#form_zip").val()
+        });
+    }
+</script>
