@@ -11,6 +11,8 @@ use Dywee\OrderCMSBundle\Service\PageDataHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
+
+
 class PageListener implements EventSubscriberInterface{
     private $pageDataHandler;
 
@@ -18,6 +20,7 @@ class PageListener implements EventSubscriberInterface{
     {
         $this->pageDataHandler = $pageDataHandler;
     }
+
 
     public static function getSubscribedEvents()
     {
@@ -49,4 +52,5 @@ class PageListener implements EventSubscriberInterface{
     {
         $footerBuilderEvent->addData($this->pageDataHandler->addDataToFooter());
     }
+
 }

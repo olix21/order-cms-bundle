@@ -2,6 +2,7 @@
 
 namespace Dywee\OrderCMSBundle\Repository;
 use Doctrine\ORM\EntityRepository;
+use Dywee\OrderBundle\Entity\BaseOrder;
 
 /**
  * OrderStatRepository
@@ -14,17 +15,57 @@ class OrderStatRepository extends EntityRepository
     public function getStats($type, $beginAt, $endAt, $detail = 'day')
     {
         $qb = $this->createQueryBuilder('s')
-            ->select('count(s.id) as total, s.createdAt, SUBSTRING(s.createdAt, 0, 10) as dateForGroupBy, s.type')
-            ->where('s.type = :type and s.createdAt between :beginAt and :endAt')
+            ->select('s.createdAt, s.type, YEAR(s.createdAt) as year, MONTH(s.createdAt) as month, DAY(s.createdAt) as day')
+            ->andWhere('s.createdAt between :beginAt and :endAt')
             ->setParameters(array(
-                    'type' => $type,
                     'beginAt' => $beginAt,
                     'endAt' => $endAt)
             )
             ->orderBy('s.createdAt', 'asc');
 
+        $qb->groupBy('s.type, year, month');
+
+
+        if(is_string($type))
+            $qb->where('count(s.id) as total, s.type = :type')
+            ->setParameter('type', $type);
+
+        elseif(is_array($type))
+        {
+            $where = '(';
+            $i = 0;
+            foreach($type as $typeElement)
+            {
+                if($i > 0)
+                    $where .= ' or ';
+                $where .= 's.type = :type'.$i;
+                $qb->setParameter('type'.$i++, $typeElement);
+            }
+            $where .= ')';
+            $qb->addSelect('count(s.id) as total');
+            $qb->andWhere($where);
+        }
+
+
         if($detail == 'day')
-            $qb->groupBy('dateForGroupBy');
+            $qb->addGroupBy('day');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function retrievedStatForOrder(BaseOrder $order, $event, $trackingKey)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('s')
+            ->where('s.order = :order and s.type = :event and s.trackingKey = :key and s.createdAt between :start and :end')
+            ->setParameters(array(
+                'order' => $order,
+                'event' => $event,
+                'key' => $trackingKey,
+                'start' => new \DateTime('today'),
+                'end' => new \DateTime('tomorrow'),
+            ))
+        ;
 
         return $qb->getQuery()->getResult();
     }

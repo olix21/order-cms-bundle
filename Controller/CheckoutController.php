@@ -22,6 +22,7 @@ use PayPal\Api\Transaction;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -115,7 +116,6 @@ class CheckoutController extends Controller
                 $em->flush();
 
                 $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::VALID_SHIPPING);
-
                 return $this->redirect($this->generateUrl('checkout_shipping_method'));
             }
 
@@ -265,8 +265,6 @@ class CheckoutController extends Controller
     }*/
 
     /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
      * @Route(name="checkout_shipping_third_person", path="checkout/shipping/third")
      */
@@ -361,79 +359,48 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @param $type
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(name="checkout_shipping_method", path="checkout/shipping/method")
      */
-    public function shippingMethodAction($type = 'pickup')
+    public function shippingMethodAction(Request $request)
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
         $em = $this->getDoctrine()->getManager();
-        $smr = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
-        $dr = $em->getRepository('DyweeShipmentBundle:Deliver');
 
-        $shipmentMethodType = $this->get('session')->get($type);
+        $this->get('dywee_order.shipment_calculator')->calculateShipments($order);
+        $shippingMethods = $this->get('dywee_order.shipment_method')->calculateForOrder($order);
 
-        $order->shipmentsCalculation(true);
+        if(!$shippingMethods)
+            throw $this->createNotFoundException($this->get('dywee_order.shipment_method')->getError());
 
-        $options = array();
+        $form = $this->createFormBuilder(array())->add('shippingMethod', ChoiceType::class, array(
+            'choices' => $shippingMethods,
+            'label' => 'checkout.shipping_method',
+            'expanded' => true
+        ))->getForm();
 
-        foreach($order->getOrderElements() as $orderElement)
+        if($form->handleRequest($request)->isValid())
         {
-            if($orderElement->getProduct() instanceof Product)
-                $shipmentMethods = $smr->myfindBy($order->getShippingAddress()->getCity()->getCountry(), $orderElement->getProduct()->getWeight()*$orderElement->getQuantity());
-            else $shipmentMethods = $smr->myfindBy($order->getShippingAddress()->getCity()->getCountry(), $orderElement->getProduct()->getWeight());
+            $shippingMethodRepository = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
+            $shippingMethod = $shippingMethodRepository->findOneById($form->getData()['shippingMethod']);
 
-            if($orderElement->getProduct() instanceof ProductSubscription)
-                $coeff = $orderElement->getProduct()->getRecurrence();
-            else $coeff = 1;
+            $order->setShippingMethod($shippingMethod);
+            $em->persist($order);
+            $em->flush();
 
-            if($shipmentMethods) {
-                //TODO refactor: old lb1x method (écrit en dur)
-                foreach ($shipmentMethods as $shipmentMethod) {
-                    if ($shipmentMethod->getDeliver()->getId() == 2 && $shipmentMethod->getType() == '24R') {
-                        $mondialRelay24R['id'] = $shipmentMethod->getId();
-                        if ($orderElement->getProduct()->getProductType() == 1)
-                            $mondialRelay24R['price'] = $shipmentMethod->getPrice() * $coeff;
-                        else
-                            $mondialRelay24R['price'] = $shipmentMethod->getPrice() * $coeff * $orderElement->getQuantity();
-                        if (array_key_exists('24R', $options))
-                            $options['24R']['price'] += $mondialRelay24R['price'];
-                        else $options['24R'] = $mondialRelay24R;
-                    } else if ($shipmentMethod->getDeliver()->getId() == 2 && $shipmentMethod->getType() == 'HOM') {
-                        $mondialRelayHOM['id'] = $shipmentMethod->getId();
-                        $mondialRelayHOM['price'] = $shipmentMethod->getPrice() * $coeff * $orderElement->getQuantity();
-                        if (array_key_exists('HOM', $options))
-                            $options['HOM']['price'] += $mondialRelayHOM['price'];
-                        else $options['HOM'] = $mondialRelayHOM;
-                    } else if ($shipmentMethod->getDeliver->getId() == 2) {
-                        $dpd['price'] = $shipmentMethod->getPrice() * $coeff * $orderElement->getQuantity();
-                        $dpd['id'] = $shipmentMethod->getId();
-                        if (array_key_exists('dpd', $options))
-                            $options['dpd']['price'] += $dpd['price'];
-                        else $options['dpd'] = $dpd;
-                    }
-                }
-                $order->setDeliveryCost($options[$shipmentMethodType->getType()]['price']);
-                if($shipmentMethodType->getType() == '24R' || $shipmentMethodType->getType() == 'HOM')
-                    $deliver = $dr->findOneByName('Mondial Relay');
-
-                else $deliver = $dr->findOneByName('DPD');
-
-                $order->setDeliver($deliver);
-            }
-            else {
-                $options['pickup']['price'] = 0;
-            }
+            return $this->redirect($this->generateUrl('checkout_overview'));
         }
 
+        $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS);
 
-        $em->persist($order);
-        $em->flush();
+        $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS, $checkoutStatEvent);
 
-        return $this->redirect($this->generateUrl('checkout_overview'));
+        return $this->render('DyweeOrderCMSBundle:Shipping:shipping_methods.html.twig', array(
+            'shipping_methods' => $shippingMethods,
+            'order' => $order,
+            'form' => $form->createView()
+        ));
     }
 
     /**
@@ -449,7 +416,7 @@ class CheckoutController extends Controller
         $data = array('order' => $order);
 
         //TODO a bouger dans une gestion "shipment"
-        if($order->getDeliveryMethod() == '24R')
+        /*if($order->getDeliveryMethod() == '24R')
         {
             $client = new \nusoap_client('http://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL', true);
 
@@ -480,7 +447,7 @@ class CheckoutController extends Controller
                 );
             }
             else throw $this->createNotFoundException('Erreur dans la recherche du point relais');
-        }
+        }*/
 
         $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_RECAP);
 

@@ -32,10 +32,12 @@
                         <div class="row">
                             <div class="col-xs-3">
                                 {% set picture = orderElement.product.pictures|first %}
-                                <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
+                                    <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                </a>
                             </div>
                             <div class="col-xs-9">
-                                {{ orderElement.product.name }}
+                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>
                             </div>
                         </div>
                     </td>

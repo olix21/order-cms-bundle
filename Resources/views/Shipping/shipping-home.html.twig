@@ -13,15 +13,15 @@
 
     {{ form_row(home.phone.phone_number) }}
 
-    {{ form_row(home.number) }}
-
-    {{ form_row(home.box) }}
-
     {{ form_row(home.line1) }}
 
     {{ form_row(home.line2) }}
 
-    {{ form_row(home.other) }}
+    {{ form_row(home.number) }}
+
+    {{ form_row(home.box) }}
+
+{{ form_row(home.other) }}
 
     {{ form_row(home.city) }}
 
@@ -29,7 +29,8 @@
     {{ form_row(home.shippingMessage) }}
 
 
-{{ form_widget(home.save, {'attr': {'class': 'btn btn-success'}, 'label': 'Suivant'}) }}
+<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Valider</button>
+
 
 {{ form_rest(home) }}
 {{ form_end(home) }}

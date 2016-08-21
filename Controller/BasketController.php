@@ -13,20 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-/*
- order_confirmation_succeed:
-    path:    /order/{reference}/confirmation/success
-    defaults: { _controller: DyweeOrderBundle:Basket:confirmationSuccess }
-
-order_confirmation_cancel:
-    path:    /order/{reference}/confirmation/cancel
-    defaults: { _controller: DyweeOrderBundle:Basket:confirmationCancel }
-
-order_validated:
-    path:     /order/validated
-    defaults: { _controller: DyweeOrderBundle:Order:validated }
-
- */
 
 class BasketController extends Controller
 {

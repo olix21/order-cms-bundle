@@ -15,7 +15,7 @@ class SessionStatManager{
 
     public function setTrackingKey()
     {
-        $key = time().'_'.$_SERVER['REMOTE_ADDR'].'_'.rand(0, 99);
+        $key = time().'_'.$_SERVER['REMOTE_ADDR'].'_'.random_int(0, 99);
         $this->session->set('order_tracking_key', $key);
         return $key;
     }

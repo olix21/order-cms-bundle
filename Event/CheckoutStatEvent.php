@@ -14,7 +14,7 @@ class CheckoutStatEvent extends Event
     private $auth;
     private $event;
 
-    public function __construct(BaseOrderInterface $order, User $user, $event, $auth = false)
+    public function __construct(BaseOrderInterface $order, User $user = null, $event = null, $auth = false)
     {
         $this->order = $order;
         $this->user = $user;

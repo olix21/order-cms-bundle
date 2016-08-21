@@ -13,13 +13,12 @@ services:
             - { name: kernel.event_subscriber }
 
 
-
     dywee_order_cms.order_session_handler:
         class: Dywee\OrderCMSBundle\Service\SessionOrderHandler
         arguments: [ '@doctrine.orm.entity_manager', '@session']
 
 
-    dywee_order_cms.admin_sidebar_listener:
+    dywee_order_cms.navbar_listener:
             class: Dywee\OrderCMSBundle\Listener\PageListener
             arguments: [ '@dywee_order_cms.page_data_handler' ]
             tags:
@@ -41,6 +40,8 @@ services:
         arguments: [ '@dywee_order_cms.plugin_box_handler' ]
         tags:
             - { name: kernel.event_subscriber }
+
+
 
     ####################################################
     #                                                  #

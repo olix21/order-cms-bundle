@@ -26,14 +26,11 @@ class OrderStatManager{
 
         $trackingKey = $this->sessionManager->getTrackingKey();
 
-        $orderStat = $orderStatRepository->findOneBy(array(
-            'order' => $order,
-            'type'  => $event,
-            'trackingKey' => $trackingKey
-        ));
+        $orderStat = $orderStatRepository->retrievedStatForOrder($order, $event, $trackingKey);
 
-        if($orderStat)
+        if(count($orderStat) > 0)
         {
+            $orderStat = $orderStat[0];
             $orderStat->setAttempts($orderStat->getAttempts() + 1);
         }
         else
@@ -62,13 +59,17 @@ class OrderStatManager{
 
         $osr = $this->em->getRepository('DyweeOrderCMSBundle:OrderStat');
 
-        $displayBaskets = $osr->getStats(DyweeOrderCMSEvent::DISPLAY_BASKET, $beginAt, $endAt, $timeScale);
-        $displayBillings = $osr->getStats(DyweeOrderCMSEvent::DISPLAY_SHIPPING, $beginAt, $endAt, $timeScale);
-        $validBillings = $osr->getStats(DyweeOrderCMSEvent::VALID_SHIPPING, $beginAt, $endAt, $timeScale);
-        $displayShippings = $osr->getStats(DyweeOrderCMSEvent::DISPLAY_SHIPPING, $beginAt, $endAt, $timeScale);
-        $validShippings = $osr->getStats(DyweeOrderCMSEvent::VALID_SHIPPING, $beginAt, $endAt, $timeScale);
-        //$shippingMethods = $osr->getStats(DyweeOrderCMSEvent::DIS, $beginAt, $endAt, $timeScale);
-        $recaps = $osr->getStats(DyweeOrderCMSEvent::DISPLAY_RECAP, $beginAt, $endAt, $timeScale);
+        $types = array(
+            DyweeOrderCMSEvent::DISPLAY_BASKET,
+            DyweeOrderCMSEvent::DISPLAY_BILLING,
+            DyweeOrderCMSEvent::VALID_BILLING,
+            DyweeOrderCMSEvent::DISPLAY_SHIPPING,
+            DyweeOrderCMSEvent::VALID_SHIPPING,
+            DyweeOrderCMSEvent::DISPLAY_RECAP
+        );
+
+
+        $rawStats = $osr->getStats($types, $beginAt, $endAt, $timeScale);
 
         $stats = array();
 
@@ -80,35 +81,14 @@ class OrderStatManager{
         {
             $key = $date->modify('+1 day')->format('d/m/Y');
             $stats[$key] = array(
-                'createdAt' => $key,
-                'displayBaskets' => 0,
-                'validBaskets' => 0,
-                'displayBillings' => 0,
-                'validBillings' => 0,
-                'displayShippings' => 0,
-                'validShippings' => 0,
-                'recaps' => 0,
-            );
+                'createdAt' => $key);
+
+            foreach($types as $type)
+                $stats[$key][$type] = 0;
         }
 
-        //On organise les données des stats
-        foreach($displayBaskets as $displayBasket)
-            $stats[$displayBasket['createdAt']->format('d/m/Y')]['displayBaskets'] = $displayBasket['total'];
-
-        foreach($displayBillings as $displayBilling)
-            $stats[$displayBilling['createdAt']->format('d/m/Y')]['displayBillings'] = $displayBilling['total'];
-
-        foreach($validBillings as $validBilling)
-            $stats[$validBilling['createdAt']->format('d/m/Y')]['validBillings'] = $validBilling['total'];
-
-        foreach($displayShippings as $displayShipping)
-            $stats[$displayShipping['createdAt']->format('d/m/Y')]['displayShippings'] = $displayShipping['total'];
-
-        foreach($validShippings as $validShipping)
-            $stats[$validShipping['createdAt']->format('d/m/Y')]['validShippings'] = $validShipping['total'];
-
-        foreach($recaps as $recap)
-            $stats[$recap['createdAt']->format('d/m/Y')]['recaps'] = $recap['total'];
+        foreach($rawStats as $stat)
+            $stats[$stat['createdAt']->format('d/m/Y')][$stat['type']] = $stat['total'];
 
         return $stats;
     }

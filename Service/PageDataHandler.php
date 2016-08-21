@@ -20,8 +20,7 @@ class PageDataHandler
 
     public function addDataToHomepage()
     {
-        $return = $this->addDataToPage();
-        return $return;
+        return $this->addDataToPage();
     }
 
     public function addDataToNavbar()

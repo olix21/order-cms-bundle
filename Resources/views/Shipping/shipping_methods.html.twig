@@ -1,0 +1,43 @@
+{# Dywee\OrderBundle\Resources\View\Basket\shipping.html.twig #}
+
+{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+
+{% block metaTitle %}
+    Méthodes de livraison {{ parent() }}
+{% endblock %}
+
+{% set current_checkout_step = 3 %}
+
+{% block body %}
+
+    <div class="spacer"></div>
+
+    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+
+    <h1>Méthode de livraison</h1>
+
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">Veuillez choisir une méthode de livraison</h2>
+            </div>
+            <div class="panel-body">
+                {{ form_start(form) }}
+
+                {{ form_row(form.shippingMethod) }}
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Continuer</button>
+                    </div>
+                </div>
+
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_footer %}
+{% endblock %}
