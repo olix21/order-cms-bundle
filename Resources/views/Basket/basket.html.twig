@@ -31,10 +31,12 @@
                     <td>
                         <div class="row">
                             <div class="col-xs-3">
-                                {% set picture = orderElement.product.pictures|first %}
-                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
-                                    <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
-                                </a>
+                                {% if orderElement.product.pictures|length > 0 %}
+                                    {% set picture = orderElement.product.pictures|first %}
+                                    <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
+                                        <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                    </a>
+                                {% endif %}
                             </div>
                             <div class="col-xs-9">
                                 <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>

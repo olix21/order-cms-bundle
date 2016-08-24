@@ -32,8 +32,10 @@
                     <td>
                         <div class="row">
                             <div class="col-xs-2">
-                                {% set picture = orderElement.product.pictures|first %}
-                                <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                {% if orderElement.product.pictures|length > 0 %}
+                                    {% set picture = orderElement.product.pictures|first %}
+                                    <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                {% endif %}
                             </div>
                             <div class="col-xs-9">
                                 {{ orderElement.product.name }}

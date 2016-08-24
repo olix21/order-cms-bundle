@@ -20,4 +20,11 @@ checkout:
 
     recap: Récapitulatif de votre commande
     contains: Votre panier contient x produits
-    shipping_message: Message pour la livraison
+
+    billing_address: Addresse de facturation
+    shipping_address: Addresse de livraison
+    shipping_method: Méthode de livraison
+
+address:
+    form:
+        shipping_message: Message pour la livraison
