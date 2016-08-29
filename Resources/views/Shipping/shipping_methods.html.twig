@@ -22,6 +22,7 @@
                 <h2 class="panel-title">Veuillez choisir une méthode de livraison</h2>
             </div>
             <div class="panel-body">
+                <p class="h4">Votre commande sera expediée en {{ order.shipments|length }} envoi{% if order.shipments|length > 1 %}s{% endif %}</p>
                 {{ form_start(form) }}
 
                 {{ form_row(form.shippingMethod) }}

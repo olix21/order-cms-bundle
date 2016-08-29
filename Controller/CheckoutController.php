@@ -366,9 +366,6 @@ class CheckoutController extends Controller
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        $em = $this->getDoctrine()->getManager();
-
-        $this->get('dywee_order.shipment_calculator')->calculateShipments($order);
         $shippingMethods = $this->get('dywee_order.shipment_method')->calculateForOrder($order);
 
         if(!$shippingMethods)
@@ -382,6 +379,7 @@ class CheckoutController extends Controller
 
         if($form->handleRequest($request)->isValid())
         {
+            $em = $this->getDoctrine()->getManager();
             $shippingMethodRepository = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
             $shippingMethod = $shippingMethodRepository->findOneById($form->getData()['shippingMethod']);
 

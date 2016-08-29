@@ -28,3 +28,4 @@ checkout:
 address:
     form:
         shipping_message: Message pour la livraison
+        other: Informations supplémentaires

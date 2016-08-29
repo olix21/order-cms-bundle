@@ -19,7 +19,7 @@ class ShippingAddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('shippingMessage',    TextareaType::class,   array('label' => 'address.form.shippingMessage', 'required' => false, 'mapped' => false))
+            ->add('shippingMessage',    TextareaType::class,   array('label' => 'address.form.shipping_message', 'required' => false, 'mapped' => false))
             ->add('other',              TextType::class,       array('label' => 'address.form.other', 'required' => false))
         ;
     }
