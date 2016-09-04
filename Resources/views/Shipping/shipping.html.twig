@@ -11,13 +11,26 @@
 
 {% block body %}
 
-    <div class="spacer"></div>
-
     {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
 
-    <h1>Vos informations de livraison</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ 'Livraison à domicile'|trans }}</h2>
+                </div>
+                <div class="panel-body">
+                    {% if orderConnexionPermission == 'anon' or orderConnexionPermission == 'both' %}
+                        {% if orderConnexionPermission == 'both' %}<h5>Une adresse non enregistrée</h5>{% endif %}
+                        {% include 'DyweeOrderCMSBundle:Shipping:shipping-home.html.twig' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+
+    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
             <p class="h4">Commande pour la personne indiquée dans les informations de facturation, choisissez le mode de livraison</p>
         {% if mr is defined %}
         <div class="panel panel-default">
@@ -36,31 +49,7 @@
         </div>
         {% endif %}
         {% if home is defined %}
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        {{ 'Livraison à domicile'|trans }}
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
-                        <h5>Une de vos adresses</h5>
-                        {#{% if app.user %}
-                            {{ render(controller('DyweeUserBundle:Basket:shippingHelper')) }}
-                        {% else %}
-                            {{ render(controller('FOSUserBundle:Security:login')) }}
-                        {% endif %}#}
-                    {% endif %}
-                    {% if orderConnexionPermission == 'anon' or orderConnexionPermission == 'both' %}
-                        {% if orderConnexionPermission == 'both' %}<h5>Une adresse non enregistrée</h5>{% endif %}
-                        {% include 'DyweeOrderCMSBundle:Shipping:shipping-home.html.twig' %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+
         {% endif %}
         {% if tierce is defined %}
             <p>&nbsp;</p><p class="h4">Pour une commande qui doit être envoyée à un autre destinataire</p>
@@ -80,7 +69,7 @@
         </div>
         {% endif %}
         <div class="spacer"></div>
-    </div>
+    </div>#}
 {% endblock %}
 
 {% block js_footer %}

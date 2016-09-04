@@ -10,60 +10,38 @@
 
 {% block body %}
 
-    <div class="spacer"></div>
-
     {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
-
-        <h1>{{ 'Vos informations de facturation'|trans }}</h1>
-
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+    
+    <div class="row">
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        {{ 'Commander avec mon compte'|trans }}
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                    {# TODO reactiver le choix d'adresse via login
-                    {% if app.user %}
-                        {{ render(controller('DyweeUserBundle:Basket:billingHelper')) }}
-                    {% else %}
-                        {{ render(controller('FOSUserBundle:Security:login')) }}
-                    {% endif %}#}
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">{{ 'Commander avec mon compte'|trans }}</h2>
+                    </div>
+                    <div class="panel-body">
+                        {# TODO reactiver le choix d'adresse via login
+                        {% if app.user %}
+                            {{ render(controller('DyweeUserBundle:Basket:billingHelper')) }}
+                        {% else %}
+                            {{ render(controller('FOSUserBundle:Security:login')) }}
+                        {% endif %}#}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
-
+        
         {% if orderConnexionPermission == 'anon' or orderConnexionPermission == 'both' %}
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a
-                    {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
-                        class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    {% else %}
-                        data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    {% endif %}
-                        {{ 'Commander sans créer de compte'|trans }}
-
-            {#{{ render(controller('DyweeOrderCMSBundle:RegisteredCheckout:registeredBilling')) }} #}
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse
-            {% if orderConnexionPermission != 'registered' and orderConnexionPermission != 'both' %}
-            in
-            {% endif %}" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">{{ 'Commander sans créer de compte'|trans }}</h2>
+                    </div>
+                    <div class="panel-body">
+                        {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
     </div>
 
