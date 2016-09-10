@@ -19,7 +19,7 @@ class OrderCMSAdminSidebarHandler{
             'key' => 'order',
             'children' => array(
                 array(
-                    'icon' => 'fa fa-cogs',
+                    'icon' => 'fa fa-area-chart',
                     'label' => 'Stat commandes',
                     'route' => $this->router->generate('order_cms_stat')
                 ),

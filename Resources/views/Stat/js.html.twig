@@ -1,0 +1,18 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{{ asset('bundles/dyweeordercms/js/stat.js') }}"></script>
+<script type="text/javascript">
+    var stats = [
+        {% for stat in stats %}
+        {% if loop.index > 1 %},{% endif %}
+        {
+            '{{ stat.createdAt }}',
+        {{ stat['dywee_order_cms.display_basket'] }},
+        {{ stat['dywee_order_cms.display_billing'] }},
+        {{ stat['dywee_order_cms.valid_shipping'] }},
+    {{ stat['dywee_order_cms.display_recap'] }}
+    }
+    {% else %}
+    {'', 0, 0, 0, 0}
+    {% endfor %}
+    ];
+</script>

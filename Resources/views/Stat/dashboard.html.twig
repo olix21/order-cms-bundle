@@ -1,83 +1,33 @@
 {% extends 'DyweeOrderCMSBundle::admin.html.twig' %}
 
 {% block body %}
-    <div class="title-heading">
-        <h1>Statistiques de vente</h1>
-    </div>
-    {{ dump() }}
-
     <div class="box">
         <div class="box-header with-border">
-            <h2 class="box-title">Statistiques</h2>
+            <h2 class="box-title">Statistiques de vente</h2>
         </div>
         <div class="box-body">
             <div id="order_stat_general"></div>
         </div>
     </div>
+{% endblock %}
 
+{% block footerJavascript %}
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        google.load("visualization", "1", {packages:["corechart", "geochart"]});
-        google.setOnLoadCallback(drawChart);
-
-        var months = {month1: null, month2: null, month3: null, month4: null, month5: null};
-        var currentDate = new Date();
-
-        var options = { month: 'long' };
-
-        months['month0'] = new Intl.DateTimeFormat('fr', options).format(currentDate);
-
-        for(var i=1; i<5; i++)
-            months['month'+i] = new Intl.DateTimeFormat('fr', options).format(currentDate.setMonth(currentDate.getMonth() - 1));
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Mois', 'panier', 'facturation', 'livraison', 'recap']
-                {% if stats|length > 0 %}
-                {% for stat in stats %}
-                , [
-                    '{{ stat.createdAt }}',
-                    {{ stat['dywee_order_cms.display_basket']}},
-                    {{ stat['dywee_order_cms.display_billing'] }},
-                    {{ stat['dywee_order_cms.valid_shipping'] }},
-                    {{ stat['dywee_order_cms.display_recap'] }}
-                ]
-                        {% endfor %}
-                        {% else %}
-                        ['', 0, 0, 0, 0]
-                {% endif %}
-            ]);
-
-            var options = {
-                title: 'En bref',
-                width: '100%',
-                height: 300,
-                curveType: 'function',
-                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {viewWindow: {min: 0}}
-            };
-
-            var chart = new google.visualization.AreaChart(document.getElementById('order_stat_general'));
-            chart.draw(data, options);
-        }
-
-
-        google.setOnLoadCallback(drawRegionsMap);
-
-        function drawRegionsMap() {
-
-            var data = google.visualization.arrayToDataTable([
-                ['Country', 'Popularity'],
-                ['BE',      5],
-                ['FR',      1]
-            ]);
-
-            var options = {};
-
-            var chart = new google.visualization.GeoChart(document.getElementById('map'));
-
-            chart.draw(data, options);
-        }
+        var stats = [];
+        stats.push(['Mois', 'panier', 'facturation', 'livraison', 'recap']);
+        {% for stat in stats %}
+            stats.push([
+                '{{ stat.createdAt }}',
+                {{ stat['dywee_order_cms.display_basket']}},
+                {{ stat['dywee_order_cms.display_billing'] }},
+                {{ stat['dywee_order_cms.valid_shipping'] }},
+                {{ stat['dywee_order_cms.display_recap'] }}
+                ]);
+        {% else %}
+            stats.push(['', 0, 0, 0, 0]);
+        {% endfor %}
 
     </script>
+    <script type="text/javascript" src="{{ asset('bundles/dyweeordercms/js/stat.js') }}"></script>
 {% endblock %}

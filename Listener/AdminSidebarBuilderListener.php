@@ -9,11 +9,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
 class AdminSidebarBuilderListener implements EventSubscriberInterface{
-    private $ProductCMSAdminSidebarHandler;
+    private $orderCMSAdminSidebarHandler;
 
-    public function __construct(OrderCMSAdminSidebarHandler $CMSAdminSidebarHandler)
+    public function __construct(OrderCMSAdminSidebarHandler $orderCMSAdminSidebarHandler)
     {
-        $this->ProductCMSAdminSidebarHandler = $CMSAdminSidebarHandler;
+        $this->orderCMSAdminSidebarHandler = $orderCMSAdminSidebarHandler;
     }
 
 
@@ -27,7 +27,7 @@ class AdminSidebarBuilderListener implements EventSubscriberInterface{
 
     public function addElementToSidebar(AdminSidebarBuilderEvent $adminSidebarBuilderEvent)
     {
-        $adminSidebarBuilderEvent->addAdminElement($this->ProductCMSAdminSidebarHandler->getSideBarMenuElement());
+        $adminSidebarBuilderEvent->addAdminElement($this->orderCMSAdminSidebarHandler->getSideBarMenuElement());
     }
 
 }
