@@ -1,6 +1,10 @@
 services:
 
-    ##############  SIDEBAR   #################
+    ###########################
+    #                         #
+    #         SIDEBAR         #
+    #                         #
+    ###########################
 
     dywee_order_cms.sidebar_handler:
         class: Dywee\OrderCMSBundle\Service\OrderCMSAdminSidebarHandler
@@ -11,6 +15,29 @@ services:
         arguments: [ '@dywee_order_cms.sidebar_handler' ]
         tags:
             - { name: kernel.event_subscriber }
+
+    ###########################
+    #                         #
+    #        DASHBOARD        #
+    #                         #
+    ###########################
+
+    dywee_order.admin_dashboard_listener:
+        class: Dywee\OrderBundle\Listener\AdminDashboardBuilderListener
+        arguments: [ '@dywee_order.dashboard_handler' ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    dywee_order.dashboard_handler:
+        class: Dywee\OrderBundle\Service\OrderAdminDashboardHandler
+        arguments: [ '@router' ]
+
+
+    ###########################
+    #                         #
+    #           CMS           #
+    #                         #
+    ###########################
 
 
     dywee_order_cms.order_session_handler:
@@ -29,7 +56,11 @@ services:
         arguments: [ '@dywee_order_cms.order_session_handler' ]
 
 
-    ######   PLUGINS BOX  #########
+    ###########################
+    #                         #
+    #        ADMIN CMS        #
+    #                         #
+    ###########################
 
     dywee_order_cms.plugin_box_handler:
         class: Dywee\OrderCMSBundle\Service\PageElementModalHandler
@@ -43,11 +74,11 @@ services:
 
 
 
-    ####################################################
-    #                                                  #
-    #                       STAT                       #
-    #                                                  #
-    ####################################################
+    ###########################
+    #                         #
+    #           STAT          #
+    #                         #
+    ###########################
 
 
     dywee_order_cms.session_manager:

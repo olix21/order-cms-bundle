@@ -16,15 +16,15 @@ class OrderCMSAdminDashboardHandler{
     public function getDashboardElement()
     {
         $elements = array(
-            'key' => 'order',
+            'key' => 'order_cms',
             'boxes' => array(
                 array(
-                    'column' => 'col-md-6',
+                    'column' => 'col-md-4',
                     'type' => 'default',
                     'title' => 'order.dashboard.stats',
                     'body' => array(
                         array(
-                            'box-body' => false,
+                            'boxBody' => false,
                             'controller' => 'DyweeOrderCMSBundle:Dashboard:Stat'
                         )
                     )

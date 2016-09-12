@@ -27,7 +27,7 @@ class AdminDashboardBuilderListener implements EventSubscriberInterface{
 
     public function addElementToDashboard(AdminDashboardBuilderEvent $adminDashboardBuilderEvent)
     {
-        $adminDashboardBuilderEvent->addAdminElement($this->orderCMSAdminDashboardHandler->getSideBarMenuElement());
+        $adminDashboardBuilderEvent->addElement($this->orderCMSAdminDashboardHandler->getDashboardElement());
         $adminDashboardBuilderEvent->addJs($this->orderCMSAdminDashboardHandler->getJs());
     }
 
