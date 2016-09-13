@@ -21,7 +21,7 @@ class OrderCMSAdminDashboardHandler{
                 array(
                     'column' => 'col-md-4',
                     'type' => 'default',
-                    'title' => 'order.dashboard.stats',
+                    'title' => 'order.dashboard.stat',
                     'body' => array(
                         array(
                             'boxBody' => false,

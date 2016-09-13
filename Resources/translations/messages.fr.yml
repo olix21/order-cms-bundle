@@ -29,3 +29,7 @@ address:
     form:
         shipping_message: Message pour la livraison
         other: Informations supplémentaires
+
+order:
+    dashboard:
+        stat: Statistiques des commandes
