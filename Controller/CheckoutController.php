@@ -136,134 +136,6 @@ class CheckoutController extends Controller
     }
 
 
-    /*  OLD METHOD
-     public function shippingAction($address_id = null, Request $request)
-    {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
-
-        $em = $this->getDoctrine()->getManager();
-        $smr = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
-        $ar = $em->getRepository('DyweeAddressBundle:Address');
-
-        if(is_numeric($address_id))
-        {
-            $shippingAddress = $ar->findOneById($address_id);
-            if($shippingAddress != null && $shippingAddress->getUser() == $this->getUser())
-            {
-                $order->setShippingAddress($shippingAddress);
-                $order->setDeliveryMethod('HOM');
-                $order->setShippingUser($this->getUser());
-
-                $em->persist($order);
-                $em->flush();
-
-                return $this->shippingAction($order, 'HomMethod');
-            }
-            else throw new AccessDeniedException('Vous ne pouvez pas sélectionner cette addresse');
-        }
-        $billingAddress = $order->getBillingAddress();
-
-
-        $liv24R = false;
-        $livHOM = false;
-
-        foreach($order->getOrderElements() as $orderElement)
-        {
-            $shipmentMethods = $smr->myfindBy($order->getBillingAddress()->getCity()->getCountry(), $orderElement->getProduct()->getWeight());
-            foreach($shipmentMethods as $shipmentMethod)
-            {
-                if($shipmentMethod->getType() == '24R')
-                {
-                    $liv24R = true;
-                    $this->get('session')->set('24RMethod', $shipmentMethod);
-                }
-
-                else if($shipmentMethod->getType() == 'HOM')
-                {
-                    $livHOM = true;
-                    $this->get('session')->set('HomMethod', $shipmentMethod);
-                }
-            }
-        }
-
-        //Tierce FORM
-        $shippingTierceAddress = new Address();
-        $formTierce = $this->createForm(ShippingAddressType::class, $shippingTierceAddress);
-
-        //Tierce Form
-
-        $data = array('tierce' => $formTierce->createView());
-
-        // HOM FORM
-        if($livHOM)
-        {
-            $shippingAddress = clone $billingAddress;
-
-            $formHome = $this->createForm(ShippingAddressType::class, $shippingAddress);
-
-            if(isset($formHome) && $formHome->handleRequest($request)->isValid()) {
-                $data = $formHome->getData();
-
-                $order->setShippingAddress($shippingAddress);
-                $order->setDeliveryMethod('HOM');
-
-                return $this->step4Action($order, 'HomMethod');
-            }
-            else $data['home'] = $formHome->createView();
-        }
-
-        //24R FORM
-        if($liv24R)
-        {
-            $formMR = $this->createForm(array())
-                ->add('country',   'entity', array(
-                    'class' => 'DyweeAddressBundle:Country',
-                    'property' => 'name',
-                    'required' => false,
-                    'data' => $shippingAddress->getCity()->getCountry()
-                ))
-                ->add('zip', 'text', array('required' => false, 'data' => $shippingAddress->getCity()->getZip()))
-                ->add('ref',   'hidden')
-                ->add('mrSave', 'submit')
-                ->getForm();
-
-            if($formMR->handleRequest($request)->isValid())
-            {
-                $cr = $em->getRepository('DyweeAddressBundle:Country');
-                $data = $formMR->getData();
-
-                $country = $cr->findOneById($data['country']->getId());
-
-                $shippingAddress->setCountry($country);
-
-                $order->setShippingAddress($shippingAddress);
-                $order->setDeliveryMethod('24R');
-                $order->setDeliveryInfo($data['ref']);
-
-                return $this->step4Action($order, '24RMethod');
-            }
-            else $data['mr'] = $formMR->createView();
-        }
-        if(isset($formTierce) && $formTierce->handleRequest($request)->isValid())
-        {
-            $order->setShippingAddress($shippingTierceAddress);
-            $order->setIsGift(true);
-
-            $order->setShippingMessage($formTierce->get('shippingMessage')->getData());
-
-            $em->persist($order);
-            $em->flush();
-
-            $request->getSession()->set('order', $order);
-
-            return $this->redirect($this->generateUrl('dywee_basket_step3b'));
-        }
-        $data['step'] = 2;
-        //TODO rendre dynamique
-        $data['orderConnexionPermission'] = 'both'; //$this->container->getParameter('dywee_order_bundle.orderConnexionPermission');
-        return $this->render('DyweeOrderCMSBundle:Checkout:shipping.html.twig', $data);
-    }*/
-
     /**
      *
      * @Route(name="checkout_shipping_third_person", path="checkout/shipping/third")
@@ -273,7 +145,7 @@ class CheckoutController extends Controller
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
         $em = $this->getDoctrine()->getManager();
-        $smr = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
+        $smr = $em->getRepository('DyweeShipmentBundle:ShippingMethod');
 
         $shipmentMethods = $smr->myfindBy($order->getShippingAddress()->getCity()->getCountry(), $order->getWeight());
 
@@ -381,7 +253,7 @@ class CheckoutController extends Controller
 
         if($form->handleRequest($request)->isValid())
         {
-            $shippingMethodRepository = $em->getRepository('DyweeShipmentBundle:ShipmentMethod');
+            $shippingMethodRepository = $em->getRepository('DyweeShipmentBundle:ShippingMethod');
             $shippingMethod = $shippingMethodRepository->findOneById($form->getData()['shippingMethod']);
 
             $order->setShippingMethod($shippingMethod);
