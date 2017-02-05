@@ -15,6 +15,7 @@ class OrderCMSAdminSidebarHandler{
 
     public function getSideBarMenuElement()
     {
+        /*
         $menu = array(
             'key' => 'order',
             'children' => array(
@@ -27,5 +28,6 @@ class OrderCMSAdminSidebarHandler{
         );
 
         return $menu;
+        */
     }
 }

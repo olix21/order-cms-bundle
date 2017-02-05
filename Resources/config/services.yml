@@ -29,7 +29,7 @@ services:
             - { name: kernel.event_subscriber }
 
     dywee_order.dashboard_handler:
-        class: Dywee\OrderBundle\Service\OrderAdminDashboardHandler
+        class: Dywee\OrderBundle\Service\AdminDashboardHandler
         arguments: [ '@router' ]
 
 
