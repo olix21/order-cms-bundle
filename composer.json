@@ -23,7 +23,8 @@
     "dywee/core-bundle": "dev-master",
     "dywee/order-bundle": "dev-master",
     "stof/doctrine-extensions-bundle": "^1.2",
-    "vich/uploader-bundle": "^1.0"
+    "vich/uploader-bundle": "^1.0",
+    "beberlei/DoctrineExtensions": "^1.0"
   },
   "autoload": {
     "psr-4": {
