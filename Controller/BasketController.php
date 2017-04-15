@@ -109,6 +109,7 @@ class BasketController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(name="basket_add_product", path="basket/add/{id}/{quantity}", defaults={"quantity"=1}, options={"expose"=true})
+     * @Route(name="add_to_cart", path="basket/add/{id}/{quantity}", defaults={"quantity"=1}, options={"expose"=true})
      *
      */
     public function addAction(BaseProduct $product, $quantity = 1, Request $request)
