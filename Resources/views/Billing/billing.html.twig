@@ -10,9 +10,10 @@
 
 {% block body %}
 
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
-    
     <div class="row">
+        <div class="col-xs-12">
+        {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
             <div class="col-md-6">
                 <div class="panel panel-default">

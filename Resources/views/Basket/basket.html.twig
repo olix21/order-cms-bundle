@@ -1,119 +1,133 @@
 {# Dywee\OrderBundle\Resources\View\Basket\basket.html.twig #}
 
-{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
 
 {% block metaTitle %}
-    {{ 'Votre panier'|trans }} {{ parent() }}
+    {{ 'basket.metaTitle'|trans }} {{ parent() }}
 {% endblock %}
 
 {% set current_checkout_step = 1 %}
 
 {% block body %}
-    <div class="spacer"></div>
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+        </div>
+        <div class="col-xs-12">
+            <h1>{{ 'basket.review'|trans }}</h1>
+            {% if order is defined %}
+                <p>{{ 'basket.contains'|trans }}</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>{{ 'checkout.table.product'|trans|capitalize }}</th>
+                            <th>{{ 'checkout.table.unit_price'|trans|capitalize }}</th>
+                            <th>{{ 'checkout.table.quantity'|trans|capitalize }}</th>
+                            <th>{{ 'checkout.table.total'|trans|capitalize }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for orderElement in order.orderElements %}
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            {% if orderElement.product.pictures|length > 0 %}
+                                                {% set picture = orderElement.product.pictures|first %}
+                                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
+                                                    <img src="{{ asset('images/products/' ~ picture.imageName) }}"
+                                                         alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
+                                <td>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                <span class="input-group-btn">
+                                    <a href="{{ path('basket_remove_product', {id: orderElement.product.id}) }}"
+                                       data-product="{{ orderElement.product.id }}"
+                                       class="btn btn-default removeOne">-</a>
+                                </span>
+                                            <input type="number" class="form-control basket-control" min="0" step="1"
+                                                   value="{{ orderElement.quantity }}"
+                                                   data-product="{{ orderElement.product.id }}"
+                                                   data-quantity="{{ orderElement.quantity }}">
+                                            <span class="input-group-btn">
+                                    <a href="{{ path('basket_add_product', {id: orderElement.product.id}) }}"
+                                       data-product="{{ orderElement.product.id }}" class="btn btn-default addOne">+</a>
+                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 quantity-control">
+                                        <a href="{{ path('basket_delete_product', {id: orderElement.product.id}) }}"
+                                           class="pull-right"><i class="fa fa-trash-o"></i></a>
+                                    </div>
+                                </td>
+                                <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="info">
+                            <td colspan="3">{{ 'checkout.total_vat_excl'|trans|capitalize }} </td>
+                            <td colspan="2">{{ order.PriceVatIncl|number_format(2) }}€</td>
+                        </tr>
+                        <tr class="success">
+                            <td colspan="3">{{ 'checkout.total_vat'|trans|capitalize }}</td>
+                            <td colspan="2" id="totalprice">{{ order.priceVatIncl|number_format(2) }}€</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-<h1>{{ 'basket.review'|trans }}</h1>
-    {% if order is defined %}
-    <p>{{ 'basket.contains'|trans }}</p>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>{{ 'checkout.table.product'|trans|capitalize }}</th>
-                <th>{{ 'checkout.table.unit_price'|trans|capitalize }}</th>
-                <th>{{ 'checkout.table.quantity'|trans|capitalize }}</th>
-                <th>{{ 'checkout.table.total'|trans|capitalize }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for orderElement in order.orderElements %}
-                <tr>
-                    <td>
-                        <div class="row">
-                            <div class="col-xs-3">
-                                {% if orderElement.product.pictures|length > 0 %}
-                                    {% set picture = orderElement.product.pictures|first %}
-                                    <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
-                                        <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
-                                    </a>
-                                {% endif %}
-                            </div>
-                            <div class="col-xs-9">
-                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>
-                            </div>
+                {% if form is defined %}
+
+                    {{ form_start(form) }}
+
+                    {{ form_errors(form) }}
+
+                    <div class="col-md-3 pull-right">
+                        {{ form_widget(form.Suivant, {"attr":{"class":"btn btn-success btn-lg btn-block"}}) }}
+                    </div>
+                    <div class="col-md-6">
+
+                        {{ form_widget(form.cuConfirmation, {label: 'J\'accepte les conditions d\'utilisation'}) }}
+
+                        <p><a href="{{ path('page_view', {data: 'conditions-generales'}) }}" target="_blank">>
+                                {{ 'Les conditions d\'utilisation'|trans }}
+                            </a></p>
+                        <div class="col-md-3">
+                            <a type="button" href="{{ path('cms_homepage') }}"
+                               class="btn btn-default">{{ 'Continuer mes achats'|trans }}</a>
                         </div>
-                    </td>
-                    <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
-                    <td>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <a href="{{ path('basket_remove_product', {id: orderElement.product.id}) }}" data-product="{{ orderElement.product.id }}" class="btn btn-default removeOne">-</a>
-                                </span>
-                                <input type="number" class="form-control basket-control" min="0" step="1" value="{{ orderElement.quantity }}" data-product="{{ orderElement.product.id }}" data-quantity="{{ orderElement.quantity }}">
-                                <span class="input-group-btn">
-                                    <a href="{{ path('basket_add_product', {id: orderElement.product.id}) }}" data-product="{{ orderElement.product.id }}" class="btn btn-default addOne">+</a>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 quantity-control">
-                            <a href="{{ path('basket_delete_product', {id: orderElement.product.id}) }}" class="pull-right"><i class="fa fa-trash-o"></i></a>
-                        </div>
-                    </td>
-                    <td>{{ orderElement.totalPrice|number_format(2) }}€</td>
-                </tr>
-            {% endfor %}
-            <tr class="info">
-                <td colspan="3">{{ 'checkout.total_vat_excl'|trans|capitalize }} </td>
-                <td colspan="2">{{ order.PriceVatIncl|number_format(2) }}€</td>
-            </tr>
-            <tr class="success">
-                <td colspan="3">{{ 'checkout.total_vat'|trans|capitalize }}</td>
-                <td colspan="2" id="totalprice">{{ order.priceVatIncl|number_format(2) }}€</td>
-            </tr>
-            </tbody>
-        </table>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                {% elseif btn is defined %}
+                    <div class="col-md-8 pull-right">
+                        {{ btn|raw }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>{{ 'Votre panier est vide'|trans }}</p>
+            {% endif %}
+        </div>
     </div>
 
-        {% if form is defined %}
 
-            {{ form_start(form) }}
-
-            {{ form_errors(form) }}
-
-            <div class="col-md-3 pull-right">
-                {{ form_widget(form.Suivant, {"attr":{"class":"btn btn-success btn-lg btn-block"}}) }}
-            </div>
-            <div class="col-md-6">
-
-                {{ form_widget(form.cuConfirmation, {label: 'J\'accepte les conditions d\'utilisation'}) }}
-
-                <p><a href="{{ path('page_view', {data: 'conditions-generales'}) }}" target="_blank">>
-                        {{ 'Les conditions d\'utilisation'|trans }}
-                    </a></p>
-                <div class="col-md-3">
-                    <a type="button" href="{{ path('cms_homepage') }}" class="btn btn-default">{{ 'Continuer mes achats'|trans }}</a>
-                </div>
-            </div>
-
-            {{ form_end(form) }}
-
-        {% elseif btn is defined %}
-            <div class="col-md-8 pull-right">
-            {{ btn|raw }}
-            </div>
-        {% endif %}
-    {% else %}
-        <p>{{ 'Votre panier est vide'|trans }}</p>
-    {% endif %}
 
     <script>
         {% if order is defined and order is not null %}
-            var initPrice = parseFloat({{ order.priceVatIncl }});
+        var initPrice = parseFloat({{ order.priceVatIncl }});
         {% else %}
-            var initPrice = 0;
+        var initPrice = 0;
         {% endif %}
-
 
 
     </script>

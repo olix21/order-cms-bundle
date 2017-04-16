@@ -3,9 +3,10 @@
 {% extends "::layout.html.twig" %}
 
 {% block metaTitle %}
-     {{ parent() }}
+    {{ parent() }}
 {% endblock %}
 
 {% block stylesheets %}
-     <link href="{{ asset('bundles/dyweecore/plugins/wizard/css/style.css') }}" rel="stylesheet">
+    {{ parent() }}
+    <link href="{{ asset('bundles/dyweeordercms/plugins/breadcrumbs-and-multistep-indicator/css/style.css') }}" rel="stylesheet">
 {% endblock %}

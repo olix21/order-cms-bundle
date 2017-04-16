@@ -18,6 +18,7 @@ class BasketController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return Response
      * @Route(name="basket_view", path="basket")
      */
@@ -25,15 +26,14 @@ class BasketController extends Controller
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        $data = array();
+        $data = [];
 
-        if($order)
-        {
+        if ($order) {
             $data['order'] = $order;
 
             if ($order->countProducts() > 0) {
 
-                $form = $this->createFormBuilder(array())
+                $form = $this->createFormBuilder([])
                     ->add('cuConfirmation', CheckboxType::class)
                     ->add('Suivant', SubmitType::class)
                     /*->add('country', EntityType::class, array(
@@ -47,13 +47,11 @@ class BasketController extends Controller
                 }
 
                 $data['form'] = $form->createView();
-            }
-            else $data['btn'] = '<button disabled="disabled" class="btn btn-default">Votre panier est vide</button>';
+            } else $data['btn'] = '<button disabled="disabled" class="btn btn-default">Votre panier est vide</button>';
 
-            if($request->getSession()->get('bypassBasketEvents')) {
+            if ($request->getSession()->get('bypassBasketEvents')) {
                 $request->getSession()->set('bypassBasketEvents', false);
-            }
-            else{
+            } else {
                 $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::DISPLAY_BASKET);
             }
         }
@@ -69,14 +67,15 @@ class BasketController extends Controller
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        return $this->render('DyweeOrderCMSBundle:Basket:inMenu.html.twig', array('order' => $order));
+        return $this->render('DyweeOrderCMSBundle:Basket:inMenu.html.twig', ['order' => $order]);
     }
 
 
     /**
      * @param BaseProduct $product
-     * @param int $quantity
-     * @param $request
+     * @param int         $quantity
+     * @param             $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(name="basket_remove_product", path="basket/remove/{id}/{quantity}", defaults={"quantity"=-1}, options={"expose"=true})
@@ -92,20 +91,20 @@ class BasketController extends Controller
         $em->persist($order);
         $em->flush();
 
-        if($request->isXmlHttpRequest())
-        {
-            return new Response(json_encode(array('type' => 'success', 'data' => array('quantity' => $order->getQuantityForProduct($product)))));
-        }
-        else {
+        if ($request->isXmlHttpRequest()) {
+            return new Response(json_encode(['type' => 'success', 'data' => ['quantity' => $order->getQuantityForProduct($product)]]));
+        } else {
             $request->getSession()->set('bypassBasketEvents', true);
+
             return $this->redirect($this->generateUrl('basket_view'));
         }
     }
 
     /**
      * @param BaseProduct $product
-     * @param int $quantity
-     * @param $request
+     * @param int         $quantity
+     * @param             $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(name="basket_add_product", path="basket/add/{id}/{quantity}", defaults={"quantity"=1}, options={"expose"=true})
@@ -122,18 +121,18 @@ class BasketController extends Controller
         $em->persist($order);
         $em->flush();
 
-        if($request->isXmlHttpRequest())
-        {
-            return new Response(json_encode(array('type' => 'success', 'data' => array('quantity' => $order->getQuantityForProduct($product)))));
-        }
-        else {
+        if ($request->isXmlHttpRequest()) {
+            return new Response(json_encode(['type' => 'success', 'data' => ['quantity' => $order->getQuantityForProduct($product)]]));
+        } else {
             $request->getSession()->set('bypassBasketEvents', true);
+
             return $this->redirect($this->generateUrl('basket_view'));
         }
     }
 
     /**
      * @param BaseProduct $product
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(name="basket_delete_product", path="basket/delete/{id}")
@@ -153,6 +152,6 @@ class BasketController extends Controller
 
         $request->getSession()->set('bypassBasketEvents', true);
 
-        return $this->redirect($this->generateUrl('basket_view', array('disableEvents' => true)));
+        return $this->redirect($this->generateUrl('basket_view', ['disableEvents' => true]));
     }
 }

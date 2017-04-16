@@ -4,6 +4,7 @@ namespace Dywee\OrderCMSBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
@@ -36,7 +37,7 @@ class SessionOrderHandler{
     public function newOrder($persist = true)
     {
         $order = new BaseOrder();
-        $order->setState(BaseOrder::STATE_IN_SESSION);
+        $order->setState(BaseOrderInterface::STATE_IN_SESSION);
         // TODO: rendre dynamique via les paramètres
         $order->setIsPriceTTC($this->isPriceTTC());
 
