@@ -3,11 +3,14 @@
 namespace Dywee\OrderCMSBundle\Controller;
 
 use Dywee\AddressBundle\Entity\Address;
+use Dywee\OrderBundle\Entity\BaseOrder;
+use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\ShippingMethod;
 use Dywee\OrderCMSBundle\DyweeOrderCMSEvent;
 use Dywee\OrderCMSBundle\Event\CheckoutStatEvent;
 use Dywee\OrderCMSBundle\Form\ShippingAddressType;
 use Dywee\OrderCMSBundle\Form\BillingAddressType;
+use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
@@ -330,6 +333,36 @@ class CheckoutController extends Controller
         $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_RECAP, $checkoutStatEvent);
 
         return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
+    }
+
+    /**
+     * @Get(path="checkout/confirmation", name="checkout_confirmation")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function confirmationAction(Request $request)
+    {
+        $order = $this->getDoctrine()->getRepository(BaseOrder::class)->find($request->getSession()->get('validatedOrderId'));
+
+        if (!in_array($order->getPaymentStatus(), [BaseOrderInterface::PAYMENT_VALIDATED, BaseOrderInterface::PAYMENT_AUTHORIZED])) {
+            return $this->redirectToRoute('checkout_fail');
+        }
+
+        return $this->render('DyweeOrderCMSBundle:Checkout:success.html.twig', [
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Get(path="checkout/fail", name="checkout_fail")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function failedAction(Request $request)
+    {
+        return new Response('Failed to succeed the payment');
     }
 
     /**

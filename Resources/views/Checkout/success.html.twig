@@ -1,0 +1,16 @@
+{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+
+{% block body %}
+    <h1>Confirmation de votre commande</h1>
+
+    <div class="container">
+        <p>Votre commande a bien été enregistrée, un email reprenant le détail de votre commande vous a été envoyé.</p>
+
+        <p>Si vous ne voyez rien venir de notre part, soyez attentif, il se pourrait que notre courrier se trouve dans vos "indésirables"</p>
+
+        <p>Votre référence de commande est le {{ order.reference }}</p>
+
+        {#<p>Cordialement,</p>
+        <img src="{{ asset('bundles/dyweecore/images/logo.png') }}" alt="La Belgique Une fois" />#}
+    </div>
+{% endblock %}

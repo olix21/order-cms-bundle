@@ -109,7 +109,7 @@
             <div class="panel panel-default" id="payment">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'Choix du paiement'|trans }}</h3></div>
                 <div class="panel-body">
-                    {{ dump(order) }}
+                    <a href="{{ path('order_payment_prepare') }}" class="btn btn-default">Payer</a>
                 </div>
             </div>
         </div>
