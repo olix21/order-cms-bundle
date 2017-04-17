@@ -2,8 +2,8 @@
 
 namespace Dywee\OrderCMSBundle\Event;
 
+use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
-use Dywee\UserBundle\Entity\UserInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class CheckoutStatEvent extends Event
@@ -13,7 +13,7 @@ class CheckoutStatEvent extends Event
     private $auth;
     private $event;
 
-    public function __construct(BaseOrderInterface $order, UserInterface $user = null, $event = null, $auth = false)
+    public function __construct(BaseOrderInterface $order, CustomerInterface $user = null, $event = null, $auth = false)
     {
         $this->order = $order;
         $this->user = $user;

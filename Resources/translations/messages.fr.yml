@@ -5,6 +5,7 @@ checkout:
         shipping: livraison
         shipping_method: Méthode de livraison
         review: recapitulatif
+        payment: paiement
 
     table:
         product: produits

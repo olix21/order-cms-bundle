@@ -1,5 +1,4 @@
 <?php
-//TODO need Paypal dependance
 
 namespace Dywee\OrderCMSBundle\Controller;
 
@@ -78,7 +77,6 @@ class CheckoutController extends Controller
         if ($order->countProducts() > 0) {
 
             $em = $this->getDoctrine()->getManager();
-            //$ar = $em->getRepository('DyweeAddressBundle:Address');
 
             $billingAddress = $order->getBillingAddress();
 
@@ -87,11 +85,13 @@ class CheckoutController extends Controller
             $shippingAddress = $billingAddress;
 
             $form = $this->createForm(ShippingAddressType::class, $shippingAddress);
-            if ($order->getShippingMessage())
+            if ($order->getShippingMessage()) {
                 $form->get('shippingMessage')->setData($order->getShippingMessage());
+            }
 
+            $form->handleRequest($request);
 
-            if ($form->handleRequest($request)->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $order->setShippingAddress($shippingAddress);
 
                 $order->setShippingMessage($form->get('shippingMessage')->getData());
@@ -113,11 +113,11 @@ class CheckoutController extends Controller
             return $this->render('DyweeOrderCMSBundle:Shipping:shipping.html.twig', [
                 'home' => $form->createView()
             ]);
-        } else {
-            $this->addFlash('warning', 'votre session a expirée');
-
-            return $this->redirectToRoute('basket_view');
         }
+
+        $this->addFlash('warning', 'votre session a expirée');
+
+        return $this->redirectToRoute('basket_view');
     }
 
 
@@ -132,19 +132,19 @@ class CheckoutController extends Controller
         $em = $this->getDoctrine()->getManager();
         $smr = $em->getRepository(ShippingMethod::class);
 
-        $shipmentMethods = $smr->myfindBy($order->getShippingAddress()->getCity()->getCountry(), $order->getWeight());
+        $shippingMethods = $smr->myfindBy($order->getShippingAddress()->getCity()->getCountry(), $order->getWeight());
 
         $liv24R = false;
         $livHOM = false;
 
-
-        foreach ($shipmentMethods as $shipmentMethod) {
-            if ($shipmentMethod->getType() == '24R') {
+        /** @var ShippingMethod $shippingMethod */
+        foreach ($shippingMethods as $shippingMethod) {
+            if ($shippingMethod->getType() === '24R') {
                 $liv24R = true;
-                $this->get('session')->set('24RMethod', $shipmentMethod);
-            } elseif ($shipmentMethod->getType() == 'HOM') {
+                $this->get('session')->set('24RMethod', $shippingMethod);
+            } elseif ($shippingMethod->getType() === 'HOM') {
                 $livHOM = true;
-                $this->get('session')->set('HomMethod', $shipmentMethod);
+                $this->get('session')->set('HomMethod', $shippingMethod);
             }
         }
 
@@ -207,8 +207,11 @@ class CheckoutController extends Controller
     }
 
     /**
-     *
      * @Route(name="checkout_shipping_method", path="checkout/shipping/method")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function shippingMethodAction(Request $request)
     {
@@ -224,13 +227,21 @@ class CheckoutController extends Controller
             'expanded' => true
         ])->getForm();
 
-        if ($form->handleRequest($request)->isValid()) {
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $shippingMethodRepository = $em->getRepository(ShippingMethod::class);
-            $shippingMethod = $shippingMethodRepository->findOneById($form->getData()['shippingMethod']);
+            $shippingMethod = $shippingMethodRepository->find($form->getData()['shippingMethod']);
 
             $order->setShippingMethod($shippingMethod);
             $em->persist($order);
             $em->flush();
+
+            return $this->redirect($this->generateUrl('checkout_overview'));
+        }
+
+        if (count($shippingMethods) === 1) {
+            $this->autoSelectShippingOption();
 
             return $this->redirect($this->generateUrl('checkout_overview'));
         }
@@ -246,11 +257,33 @@ class CheckoutController extends Controller
         ]);
     }
 
+
+    private function autoSelectShippingOption()
+    {
+        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $shippingMethods = $this->get('dywee_order.shipment_method')->calculateForOrder($order);
+
+
+        if (is_array($shippingMethods) && count($shippingMethods) !== 1) {
+            throw new \LogicException('Cannot auto select shipping method if there is no shipping method or if there are more than 1');
+        }
+
+        $shippingMethodRepository = $em->getRepository(ShippingMethod::class);
+        $shippingMethod = $shippingMethodRepository->find(array_values($shippingMethods)[0]);
+
+        $order->setShippingMethod($shippingMethod);
+
+        $em->persist($order);
+        $em->flush();
+    }
+
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     *
      * @Route(name="checkout_overview", path="checkout/overview")
      *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function overviewAction()
     {

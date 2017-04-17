@@ -9,11 +9,11 @@
 {% set current_checkout_step = 2 %}
 
 {% block body %}
-
     <div class="row">
         <div class="col-xs-12">
-        {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
-    
+            {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+        </div>
+
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
             <div class="col-md-6">
                 <div class="panel panel-default">
