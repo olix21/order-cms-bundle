@@ -12,7 +12,7 @@ services:
 
     dywee_order_cms.admin_sidebar_listener:
         class: Dywee\OrderCMSBundle\Listener\AdminSidebarBuilderListener
-        arguments: [ '@dywee_order_cms.sidebar_handler' ]
+        arguments: [ '@dywee_order_cms.sidebar_handler', false ]
         tags:
             - { name: kernel.event_subscriber }
 
