@@ -1,0 +1,15 @@
+{% if addresses|length > 0 %}
+    <p>Choose an address</p>
+{% else %}
+    <div class="alert alert-info">No address found for this account. Please enter a new address</div>
+{% endif %}
+
+<div class="row">
+    {% for address in addresses %}
+        {% include 'DyweeOrderCMSBundle:Address:pickerElement.html.twig' %}
+    {% else %}
+        <div class="col-md-12">
+            {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
+        </div>
+    {% endfor %}
+</div>

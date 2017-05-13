@@ -1,12 +1,20 @@
 {# Dywee\OrderBundle\Resources\View\Basket\facturation.html.twig #}
 
-{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
 
 {% block metaTitle %}
     {{ 'Adresse de facturation'|trans }} {{ parent() }}
 {% endblock %}
 
 {% set current_checkout_step = 2 %}
+
+{% set columnClass %}{% spaceless %}
+    {% if orderConnexionPermission == 'both' and app.user is null %}
+        col-lg-6
+    {% else %}
+        col-md-8 col-md-offset-2
+    {% endif %}
+{% endspaceless %}{% endset %}
 
 {% block body %}
     <div class="row">
@@ -15,25 +23,24 @@
         </div>
 
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
-            <div class="col-md-6">
+            <div class="{{ columnClass }}">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h2 class="panel-title">{{ 'Commander avec mon compte'|trans }}</h2>
                     </div>
                     <div class="panel-body">
-                        {# TODO reactiver le choix d'adresse via login
                         {% if app.user %}
-                            {{ render(controller('DyweeUserBundle:Basket:billingHelper')) }}
+                            {{ render(controller('DyweeOrderCMSBundle:RegisteredCheckout:addressPicker')) }}
                         {% else %}
                             {{ render(controller('FOSUserBundle:Security:login')) }}
-                        {% endif %}#}
+                        {% endif %}
                     </div>
                 </div>
             </div>
         {% endif %}
-        
-        {% if orderConnexionPermission == 'anon' or orderConnexionPermission == 'both' %}
-            <div class="col-md-6">
+
+        {% if orderConnexionPermission == 'anon' or (orderConnexionPermission == 'both' and app.user is null) %}
+            <div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h2 class="panel-title">{{ 'Commander sans créer de compte'|trans }}</h2>
@@ -49,7 +56,7 @@
 {% endblock %}
 
 {% block js_footer %}
-<script>
-    dywee_handle_form_collection('billing_address_emails');
-</script>
+    <script>
+        dywee_handle_form_collection('billing_address_emails');
+    </script>
 {% endblock %}

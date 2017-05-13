@@ -1,0 +1,14 @@
+<div class="col-md-6">
+    <a href="{{ path('checkout_billing_address_selected', {id: address.id}) }}">
+        <div class="panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Address</h3>
+            </div>
+            <div class="panel-body">
+                {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                <button class="btn btn-default btn-block">Choose</button>
+            </div>
+
+        </div>
+    </a>
+</div>

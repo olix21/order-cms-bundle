@@ -3,6 +3,7 @@
 namespace Dywee\OrderCMSBundle\Controller;
 
 use Dywee\AddressBundle\Entity\Address;
+use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\ShippingMethod;
@@ -21,43 +22,64 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class CheckoutController extends Controller
 {
     /**
-     * @param Request $request
+     * @param Address|null $address
+     * @param Request      $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
-     * @Route(name="checkout_billing", path="checkout/billing")
+     * @Route(name="checkout_billing", path="checkout/billing", defaults={"address": null})
+     * @Route(name="checkout_billing_address_selected", path="checkout/billing/address/{id}")
      */
-    public function billingAction(Request $request)
+    public function billingAction(Address $address = null, Request $request)
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
         if ($order->countProducts() > 0) {
-            $em = $this->getDoctrine()->getManager();
 
-            $billingAddress = $order->getBillingAddress() ?? new Address();
+            // If no address provided: form
+            if (!$address) {
+                $address = $order->getBillingAddress() ?? new Address();
 
-            $form = $this->createForm(BillingAddressType::class, $billingAddress);
+                $form = $this->createForm(BillingAddressType::class, $address);
 
-            if ($form->handleRequest($request)->isValid()) {
-                $order->setBillingAddress($billingAddress);
+                $form->handleRequest($request);
 
+                if ($form->isSubmitted() && $form->isValid()) {
+
+                    if ($this->getUser()) {
+                        $address->setUser($this->getUser());
+                    }
+                } else {
+                    $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::DISPLAY_BILLING);
+
+                    return $this->render('DyweeOrderCMSBundle:Billing:billing.html.twig',
+                        [
+                            'form'                     => $form->createView(),
+                            //TODO rendre dynamique
+                            'orderConnexionPermission' => 'both'
+                        ]
+                    );
+                }
+            }
+
+            // Handling of provided address / valid form
+            if ($address) {
+                $order->setBillingAddress($address);
+
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($order);
                 $em->flush();
 
                 $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::VALID_BILLING);
 
-                return $this->redirect($this->generateUrl('checkout_shipping'));
+                if($this->get('dywee_order.virtualization_manager')->isFullyVirtual($order)) {
+                    //handle free shipping
+                    return $this->redirectToRoute('checkout_overview');
+                } else {
+                    return $this->redirectToRoute('checkout_shipping');
+                }
             }
 
-            $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::DISPLAY_BILLING);
-
-            return $this->render('DyweeOrderCMSBundle:Billing:billing.html.twig',
-                [
-                    'form'                     => $form->createView(),
-                    //TODO rendre dynamique
-                    'orderConnexionPermission' => 'both'
-                ]
-            );
         } else {
             $this->addFlash('warning', 'votre session a expirée');
 
@@ -269,7 +291,6 @@ class CheckoutController extends Controller
 
         $shippingMethods = $this->get('dywee_order.shipment_method')->calculateForOrder($order);
 
-
         if (is_array($shippingMethods) && count($shippingMethods) !== 1) {
             throw new \LogicException('Cannot auto select shipping method if there is no shipping method or if there are more than 1');
         }
@@ -292,47 +313,54 @@ class CheckoutController extends Controller
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        $data = ['order' => $order];
+        if ($order->countProducts() > 0) {
 
-        //TODO a bouger dans une gestion "shipment"
-        /*if($order->getDeliveryMethod() == '24R')
-        {
-            $client = new \nusoap_client('http://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL', true);
+            $data = ['order' => $order];
 
-            $explode = explode('-', $order->getDeliveryInfo());
-
-            $params = array(
-                'Enseigne' => "BEBLCBLC",
-                'Num' => $explode[1],
-                'Pays' => $explode[0]
-            );
-
-            $security = '';
-            foreach($params as $param)
-                $security .= $param;
-            $security .= 'xgG1mpth';
-
-            $params['Security'] = strtoupper(md5($security));
-
-            $result = $client->call('WSI2_AdressePointRelais', $params, 'http://www.mondialrelay.fr/webservice/', 'http://www.mondialrelay.fr/webservice/WSI2_AdressePointRelais');
-
-            if($result['WSI2_AdressePointRelaisResult']['STAT'] == 0)
+            //TODO a bouger dans une gestion "shipment"
+            /*if($order->getDeliveryMethod() == '24R')
             {
-                $data['relais'] = array(
-                    'address1'  => $result['WSI2_AdressePointRelaisResult']['LgAdr1'],
-                    'address2'  => $result['WSI2_AdressePointRelaisResult']['LgAdr3'],
-                    'zip'       => $result['WSI2_AdressePointRelaisResult']['CP'],
-                    'cityString' => $result['WSI2_AdressePointRelaisResult']['Ville']
+                $client = new \nusoap_client('http://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL', true);
+
+                $explode = explode('-', $order->getDeliveryInfo());
+
+                $params = array(
+                    'Enseigne' => "BEBLCBLC",
+                    'Num' => $explode[1],
+                    'Pays' => $explode[0]
                 );
-            }
-            else throw $this->createNotFoundException('Erreur dans la recherche du point relais');
-        }*/
 
-        $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_RECAP);
+                $security = '';
+                foreach($params as $param)
+                    $security .= $param;
+                $security .= 'xgG1mpth';
 
-        $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_RECAP, $checkoutStatEvent);
+                $params['Security'] = strtoupper(md5($security));
 
-        return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
+                $result = $client->call('WSI2_AdressePointRelais', $params, 'http://www.mondialrelay.fr/webservice/', 'http://www.mondialrelay.fr/webservice/WSI2_AdressePointRelais');
+
+                if($result['WSI2_AdressePointRelaisResult']['STAT'] == 0)
+                {
+                    $data['relais'] = array(
+                        'address1'  => $result['WSI2_AdressePointRelaisResult']['LgAdr1'],
+                        'address2'  => $result['WSI2_AdressePointRelaisResult']['LgAdr3'],
+                        'zip'       => $result['WSI2_AdressePointRelaisResult']['CP'],
+                        'cityString' => $result['WSI2_AdressePointRelaisResult']['Ville']
+                    );
+                }
+                else throw $this->createNotFoundException('Erreur dans la recherche du point relais');
+            }*/
+
+            $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_RECAP);
+
+            $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_RECAP, $checkoutStatEvent);
+
+            return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
+        } else {
+            $this->addFlash('warning', 'votre session a expirée');
+
+            return $this->redirectToRoute('basket_view');
+        }
     }
 
     /**
