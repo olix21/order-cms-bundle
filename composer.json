@@ -1,5 +1,5 @@
 {
-  "name": "dywee/order-cms-bundle",
+  "name": "olix21/order-cms-bundle",
   "type": "symfony-bundle",
   "description": "Symfony3 bundle for easy management of eshop and order",
   "keywords": ["product", "eshop", "commerce"],
@@ -19,16 +19,16 @@
     }
   ],
   "require": {
-    "php": ">=7.0.0",
-    "dywee/core-bundle": "dev-master",
-    "dywee/order-bundle": "dev-master",
+    "php": ">=7.1.0",
+    "olix21/core-bundle": "dev-master",
+    "olix21/order-bundle": "dev-master",
     "stof/doctrine-extensions-bundle": "^1.2",
     "vich/uploader-bundle": "^1.0",
     "beberlei/DoctrineExtensions": "^1.0"
   },
   "autoload": {
     "psr-4": {
-      "Dywee\\OrderCMSBundle\\": ""
+      "Olix21\\OrderCMSBundle\\": ""
     }
   }
 }
