@@ -1,5 +1,5 @@
 {
-  "name": "dywee/faq-bundle/: "",order-cms-bundle",
+  "name": "dywee/order-cms-bundle",
   "type": "symfony-bundle",
   "description": "Symfony3 bundle for easy management of eshop and order",
   "keywords": ["product", "eshop", "commerce"],
@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "dywee/faq-bundle/: "",core-bundle": "dev-master",
-    "dywee/faq-bundle/: "",order-bundle": "dev-master",
+    "dywee/core-bundle": "dev-master",
+    "dywee/order-bundle": "dev-master",
     "stof/doctrine-extensions-bundle": "^1.2",
     "vich/uploader-bundle": "^1.0",
     "beberlei/DoctrineExtensions": "^1.0"
