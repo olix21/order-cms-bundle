@@ -8,7 +8,8 @@ use Dywee\CoreBundle\DyweeCoreEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
-class AdminDashboardBuilderListener implements EventSubscriberInterface{
+class AdminDashboardBuilderListener implements EventSubscriberInterface
+{
     private $orderCMSAdminDashboardHandler;
 
     public function __construct(OrderCMSAdminDashboardHandler $orderCMSAdminDashboardHandler)
@@ -20,9 +21,9 @@ class AdminDashboardBuilderListener implements EventSubscriberInterface{
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
-        return array(
-            DyweeCoreEvent::BUILD_ADMIN_DASHBOARD => array('addElementToDashboard', 2040)
-        );
+        return [
+            DyweeCoreEvent::BUILD_ADMIN_DASHBOARD => ['addElementToDashboard', 2040]
+        ];
     }
 
     public function addElementToDashboard(AdminDashboardBuilderEvent $adminDashboardBuilderEvent)

@@ -8,32 +8,52 @@ use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
-class SessionOrderHandler{
+class SessionOrderHandler
+{
+    /** @var Session */
     private $session;
+
+    /** @var EntityManager */
     private $em;
 
+    /**
+     * SessionOrderHandler constructor.
+     *
+     * @param EntityManager $em
+     * @param Session       $session
+     */
     public function __construct(EntityManager $em, Session $session)
     {
         $this->em = $em;
         $this->session = $session;
     }
 
+    /**
+     * @return BaseOrder|mixed
+     */
     public function getOrderFromSession()
     {
         $order = $this->session->get('order');
 
-        if(!$order)
+        if (!$order) {
             return $this->newOrder();
+        }
 
         $order = $this->em->getRepository('DyweeOrderBundle:BaseOrder')->findOneById($order->getId());
 
-        if($order)
+        if ($order) {
             return $order;
+        }
 
         return $this->newOrder();
 
     }
 
+    /**
+     * @param bool $persist
+     *
+     * @return BaseOrder
+     */
     public function newOrder($persist = true)
     {
         $order = new BaseOrder();
@@ -41,8 +61,7 @@ class SessionOrderHandler{
         // TODO: rendre dynamique via les paramètres
         $order->setIsPriceTTC($this->isPriceTTC());
 
-        if($persist)
-        {
+        if ($persist) {
             $this->em->persist($order);
             $this->em->flush();
         }
@@ -51,6 +70,9 @@ class SessionOrderHandler{
         return $order;
     }
 
+    /**
+     * @return bool
+     */
     // TODO: rendre dynamique via les paramètres
     public function isPriceTTC()
     {

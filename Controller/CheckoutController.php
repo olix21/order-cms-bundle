@@ -7,6 +7,7 @@ use Dywee\CoreBundle\Model\AddressInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\ShippingMethod;
+use Dywee\OrderBundle\Form\ShippingOptionsType;
 use Dywee\OrderCMSBundle\DyweeOrderCMSEvent;
 use Dywee\OrderCMSBundle\Event\CheckoutStatEvent;
 use Dywee\OrderCMSBundle\Form\ShippingAddressType;
@@ -14,6 +15,7 @@ use Dywee\OrderCMSBundle\Form\BillingAddressType;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -72,7 +74,7 @@ class CheckoutController extends Controller
 
                 $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::VALID_BILLING);
 
-                if($this->get('dywee_order.virtualization_manager')->isFullyVirtual($order)) {
+                if ($this->get('dywee_order.virtualization_manager')->isFullyVirtual($order)) {
                     //handle free shipping
                     return $this->redirectToRoute('checkout_overview');
                 } else {
@@ -244,13 +246,9 @@ class CheckoutController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $shippingMethods = $this->get('dywee_order.shipment_method')->calculateForOrder($order);
 
-        $form = $this->createFormBuilder([])->add('shippingMethod', ChoiceType::class, [
-            'choices'  => $shippingMethods,
-            'label'    => 'checkout.shipping_method',
-            'expanded' => true
-        ])->getForm();
+        $form = $this->createForm(ShippingOptionsType::class, [])
+            ->add('validate', SubmitType::class);
 
         $form->handleRequest($request);
 
@@ -265,7 +263,7 @@ class CheckoutController extends Controller
             return $this->redirect($this->generateUrl('checkout_overview'));
         }
 
-        if (count($shippingMethods) === 1) {
+        if (count($this->get('dywee_order.shipment_method')->calculateForOrder($order)) === 1) {
             $this->autoSelectShippingOption();
 
             return $this->redirect($this->generateUrl('checkout_overview'));
@@ -276,12 +274,10 @@ class CheckoutController extends Controller
         $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS, $checkoutStatEvent);
 
         return $this->render('DyweeOrderCMSBundle:Shipping:shipping_methods.html.twig', [
-            'shipping_methods' => $shippingMethods,
             'order'            => $order,
             'form'             => $form->createView()
         ]);
     }
-
 
     private function autoSelectShippingOption()
     {
