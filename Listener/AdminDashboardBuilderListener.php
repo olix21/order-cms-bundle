@@ -2,7 +2,7 @@
 
 namespace Dywee\OrderCMSBundle\Listener;
 
-use Dywee\CoreBundle\Event\AdminDashboardBuilderEvent;
+use Dywee\CoreBundle\Event\DashboardBuilderEvent;
 use Dywee\OrderCMSBundle\Service\OrderCMSAdminDashboardHandler;
 use Dywee\CoreBundle\DyweeCoreEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,7 +26,7 @@ class AdminDashboardBuilderListener implements EventSubscriberInterface
         ];
     }
 
-    public function addElementToDashboard(AdminDashboardBuilderEvent $adminDashboardBuilderEvent)
+    public function addElementToDashboard(DashboardBuilderEvent $adminDashboardBuilderEvent)
     {
         $adminDashboardBuilderEvent->addElement($this->orderCMSAdminDashboardHandler->getDashboardElement());
         $adminDashboardBuilderEvent->addJs($this->orderCMSAdminDashboardHandler->getJs());
