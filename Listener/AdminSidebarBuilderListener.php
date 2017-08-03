@@ -16,13 +16,21 @@ class AdminSidebarBuilderListener implements EventSubscriberInterface
     /** @var bool */
     private $display;
 
+    /**
+     * AdminSidebarBuilderListener constructor.
+     *
+     * @param OrderCMSAdminSidebarHandler $orderCMSAdminSidebarHandler
+     * @param                             $display
+     */
     public function __construct(OrderCMSAdminSidebarHandler $orderCMSAdminSidebarHandler, $display)
     {
         $this->orderCMSAdminSidebarHandler = $orderCMSAdminSidebarHandler;
         $this->display = $display;
     }
 
-
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
@@ -31,6 +39,9 @@ class AdminSidebarBuilderListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param SidebarBuilderEvent $adminSidebarBuilderEvent
+     */
     public function addElementToSidebar(SidebarBuilderEvent $adminSidebarBuilderEvent)
     {
         if ($this->display) {

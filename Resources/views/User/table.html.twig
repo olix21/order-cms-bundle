@@ -1,0 +1,87 @@
+{# Dywee\OrderBundle\Resources\View\Order\orderTableRaw.html.twig #}
+{% if orders is not empty %}
+
+    <div class="table-responsive">
+        <table class="table no-margin">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Réference</th>
+                <th><i class="fa fa-file-text"></i></th>
+                <th>Acheteur</th>
+                <th>Receveur</th>
+                <th>Statut Paiement</th>
+                <th>Statut</th>
+                <th><i class="fa fa-envelope-o"></i></th>
+                <th>Total</th>
+                <th>Commande</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td><small>{{ order.id }}</small></td>
+                    <td><small>{{ order.reference }}</small></td>
+                    <td><small>{{ order.invoiceReference }}</small></td>
+                    <td><small>
+                            {% if order.billingAddress is not null %}
+                                {{ order.billingAddress.lastName }}
+                            {% else %}
+                                <span class="label label-default">NC</span>
+                            {% endif %}
+                        </small></td>
+                    <td><small>
+                            {% if order.shippingAddress is not null %}
+                                {{ order.shippingAddress.lastName }}
+                            {% else %}
+                                <span class="label label-default">NC</span>
+                            {% endif %}
+                        </small></td>
+                    <td><small>
+                            {% if order.paymentState == 0 %}
+                                <span class="label label-info">En attente de paiement</span>
+                            {% elseif order.paymentState == 1 %}
+                                <span class="label label-primary">Accompte donné</span>
+                            {% elseif order.paymentState == 2 %}
+                                <span class="label label-success">Payé</span>
+                            {% elseif order.paymentState == 3 %}
+                                <span class="label label-default">Remboursé</span>
+                            {% else %}
+                                <span class="label label-danger">Erreur</span>
+                            {% endif %}
+                        </small>
+                    </td>
+                    <td><small>
+                            {% if order.state == 0 %}
+                                <span class="label label-warning">Annulée</span>
+                            {% elseif order.state == 1 %}
+                                <span class="label label-default">En attente</span>
+                            {% elseif order.state == 2 %}
+                                <span class="label label-success">Active</span>
+                            {% elseif order.state == 3 %}
+                                <span class="label label-info">Terminée</span>
+                            {% elseif order.state == -1 %}
+                                <span class="label label-warning">En session</span>
+                            {% else %}
+                                <span class="label label-danger">Erreur</span>
+                            {% endif %}
+                        </small>
+                    </td>
+                    <td><small>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</small></td>
+                    <td><small>{{ order.totalPrice|number_format(2) }}€</small></td>
+                    <td><small>{{ order.creationDate|date('d/m/Y') }}</small></td>
+                    <td class="actions"><small>
+                            <a href="{{ path('dywee_order_view', {id: order.id}) }}"><i class="fa fa-eye"></i> </a>
+                            <a href="{{ path('dywee_order_invoice_download', {idOrder: order.id}) }}"><i class="fa fa-file-text"></i> </a>
+                        </small>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div><!-- /.table-responsive -->
+{% else %}
+    Aucune commande
+{% endif %}
