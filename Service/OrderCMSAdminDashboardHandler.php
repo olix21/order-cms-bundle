@@ -4,42 +4,54 @@ namespace Dywee\OrderCMSBundle\Service;
 
 use Symfony\Component\Routing\Router;
 
-class OrderCMSAdminDashboardHandler{
-
+class OrderCMSAdminDashboardHandler
+{
+    /** @var Router  */
     private $router;
 
+    /**
+     * OrderCMSAdminDashboardHandler constructor.
+     *
+     * @param Router $router
+     */
     public function __construct(Router $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * @return array
+     */
     public function getDashboardElement()
     {
-        $elements = array(
-            'key' => 'order_cms',
-            'boxes' => array(
-                array(
+        $elements = [
+            'key'   => 'order_cms',
+            'boxes' => [
+                [
                     'column' => 'col-md-4',
-                    'type' => 'default',
-                    'title' => 'order.dashboard.stat',
-                    'body' => array(
-                        array(
-                            'boxBody' => false,
+                    'type'   => 'default',
+                    'title'  => 'order.dashboard.stat',
+                    'body'   => [
+                        [
+                            'boxBody'    => false,
                             'controller' => 'DyweeOrderCMSBundle:Dashboard:Stat'
-                        )
-                    )
-                )
-            ),
-        );
+                        ]
+                    ]
+                ]
+            ],
+        ];
 
         return $elements;
     }
 
+    /**
+     * @return array
+     */
     public function getJs()
     {
-        return array(
-            array('type' => 'file', 'url' => 'absolute', 'src' => 'https://www.google.com/jsapi'),
-            array('type' => 'script', 'script' => 'var stats = [];
+        return [
+            ['type' => 'file', 'url' => 'absolute', 'src' => 'https://www.google.com/jsapi'],
+            ['type' => 'script', 'script' => 'var stats = [];
         stats.push([\'Mois\', \'panier\', \'facturation\', \'livraison\', \'recap\']);
         {% for stat in stats %}
             stats.push([
@@ -48,8 +60,8 @@ class OrderCMSAdminDashboardHandler{
                 {{ stat[\'dywee_order_cms.display_billing\'] }},
                 {{ stat[\'dywee_order_cms.valid_shipping\'] }},
                 {{ stat[\'dywee_order_cms.display_recap\'] }}
-                ]);'),
-            array('type' => 'file', 'url' => 'relative', 'src' => 'bundles/dyweeordercms/js/stat.js'),
-        );
+                ]);'],
+            ['type' => 'file', 'url' => 'relative', 'src' => 'bundles/dyweeordercms/js/stat.js'],
+        ];
     }
 }

@@ -1,4 +1,4 @@
-{# Dywee\OrderBundle\Resources\View\Order\orderTableRaw.html.twig #}
+
 {% if orders is not empty %}
 
     <div class="table-responsive">
@@ -83,5 +83,7 @@
 
     </div><!-- /.table-responsive -->
 {% else %}
-    Aucune commande
+    <div class="panel-body">
+        <p>Aucune commande</p>
+    </div>
 {% endif %}

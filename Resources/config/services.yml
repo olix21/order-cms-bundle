@@ -6,13 +6,23 @@ services:
     #                         #
     ###########################
 
-    dywee_order_cms.sidebar_handler:
+    dywee_order_cms.admin_sidebar_handler:
         class: Dywee\OrderCMSBundle\Service\OrderCMSAdminSidebarHandler
         arguments: [ '@router' ]
 
     dywee_order_cms.admin_sidebar_listener:
         class: Dywee\OrderCMSBundle\Listener\AdminSidebarBuilderListener
-        arguments: [ '@dywee_order_cms.sidebar_handler', false ]
+        arguments: [ '@dywee_order_cms.admin_sidebar_handler', false ]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    dywee_order_cms.member_sidebar_handler:
+            class: Dywee\OrderCMSBundle\Service\MemberSidebarHandler
+            arguments: [ '@router' ]
+
+    dywee_order_cms.member_sidebar_listener:
+        class: Dywee\OrderCMSBundle\Listener\MemberSidebarBuilderListener
+        arguments: [ '@dywee_order_cms.member_sidebar_handler', false ]
         tags:
             - { name: kernel.event_subscriber }
 

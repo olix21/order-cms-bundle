@@ -4,13 +4,13 @@ namespace Dywee\OrderCMSBundle\Service;
 
 use Symfony\Component\Routing\Router;
 
-class OrderCMSAdminSidebarHandler
+class OrderCMSMemberSidebarHandler
 {
     /** @var Router  */
     private $router;
 
     /**
-     * OrderCMSAdminSidebarHandler constructor.
+     * OrderCMSMemberSidebarHandler constructor.
      *
      * @param Router $router
      */
@@ -24,16 +24,16 @@ class OrderCMSAdminSidebarHandler
      */
     public function getSideBarMenuElement()
     {
-        $menu = [
-            'key'      => 'order',
-            'children' => [
-                [
-                    'icon'  => 'fa fa-area-chart',
+        $menu = array(
+            'key' => 'order',
+            'children' => array(
+                array(
+                    'icon' => 'fa fa-area-chart',
                     'label' => 'Stat commandes',
                     'route' => $this->router->generate('order_cms_stat')
-                ],
-            ]
-        ];
+                ),
+            )
+        );
 
         return $menu;
     }

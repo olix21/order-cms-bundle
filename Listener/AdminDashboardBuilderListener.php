@@ -10,14 +10,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AdminDashboardBuilderListener implements EventSubscriberInterface
 {
+    /** @var OrderCMSAdminDashboardHandler  */
     private $orderCMSAdminDashboardHandler;
 
+    /**
+     * AdminDashboardBuilderListener constructor.
+     *
+     * @param OrderCMSAdminDashboardHandler $orderCMSAdminDashboardHandler
+     */
     public function __construct(OrderCMSAdminDashboardHandler $orderCMSAdminDashboardHandler)
     {
         $this->orderCMSAdminDashboardHandler = $orderCMSAdminDashboardHandler;
     }
 
-
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
@@ -26,10 +34,12 @@ class AdminDashboardBuilderListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param DashboardBuilderEvent $adminDashboardBuilderEvent
+     */
     public function addElementToDashboard(DashboardBuilderEvent $adminDashboardBuilderEvent)
     {
         $adminDashboardBuilderEvent->addElement($this->orderCMSAdminDashboardHandler->getDashboardElement());
         $adminDashboardBuilderEvent->addJs($this->orderCMSAdminDashboardHandler->getJs());
     }
-
 }

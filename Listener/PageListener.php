@@ -11,43 +11,62 @@ use Dywee\OrderCMSBundle\Service\PageDataHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
-
-
-class PageListener implements EventSubscriberInterface{
+class PageListener implements EventSubscriberInterface
+{
+    /** @var PageDataHandler  */
     private $pageDataHandler;
 
+    /**
+     * PageListener constructor.
+     *
+     * @param PageDataHandler $pageDataHandler
+     */
     public function __construct(PageDataHandler $pageDataHandler)
     {
         $this->pageDataHandler = $pageDataHandler;
     }
 
-
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         // return the subscribed events, their methods and priorities
-        return array(
-            DyweeCMSEvent::BUILD_PAGE       => array('addElementToPage'),
-            DyweeCMSEvent::BUILD_HOMEPAGE   => array('addElementToHomepage'),
-            DyweeCMSEvent::BUILD_NAVBAR   => array('addElementToNavbar'),
-            DyweeCMSEvent::BUILD_FOOTER   => array('addElementToFooter'),
-        );
+        return [
+            DyweeCMSEvent::BUILD_PAGE     => ['addElementToPage'],
+            DyweeCMSEvent::BUILD_HOMEPAGE => ['addElementToHomepage'],
+            DyweeCMSEvent::BUILD_NAVBAR   => ['addElementToNavbar'],
+            DyweeCMSEvent::BUILD_FOOTER   => ['addElementToFooter'],
+        ];
     }
 
+    /**
+     * @param PageBuilderEvent $pageBuilderEvent
+     */
     public function addElementToPage(PageBuilderEvent $pageBuilderEvent)
     {
         $pageBuilderEvent->addData($this->pageDataHandler->addDataToPage());
     }
 
+    /**
+     * @param HomepageBuilderEvent $homepageBuilderEvent
+     */
     public function addElementToHomepage(HomepageBuilderEvent $homepageBuilderEvent)
     {
         $homepageBuilderEvent->addData($this->pageDataHandler->addDataToHomepage());
     }
 
+    /**
+     * @param NavbarBuilderEvent $navbarBuilderEvent
+     */
     public function addElementToNavbar(NavbarBuilderEvent $navbarBuilderEvent)
     {
         $navbarBuilderEvent->addData($this->pageDataHandler->addDataToNavbar());
     }
 
+    /**
+     * @param FooterBuilderEvent $footerBuilderEvent
+     */
     public function addElementToFooter(FooterBuilderEvent $footerBuilderEvent)
     {
         $footerBuilderEvent->addData($this->pageDataHandler->addDataToFooter());

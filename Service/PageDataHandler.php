@@ -2,35 +2,51 @@
 
 namespace Dywee\OrderCMSBundle\Service;
 
-use Symfony\Component\Routing\Router;
-
 class PageDataHandler
 {
+    /** @var SessionOrderHandler  */
     private $orderSessionManager;
 
+    /**
+     * PageDataHandler constructor.
+     *
+     * @param SessionOrderHandler $sessionManager
+     */
     public function __construct(SessionOrderHandler $sessionManager)
     {
         $this->orderSessionManager = $sessionManager;
     }
 
+    /**
+     * @return array
+     */
     public function addDataToPage()
     {
-        return array('order' => $this->orderSessionManager->getOrderFromSession());
+        return ['order' => $this->orderSessionManager->getOrderFromSession()];
     }
 
+    /**
+     * @return array
+     */
     public function addDataToHomepage()
     {
         return $this->addDataToPage();
     }
 
+    /**
+     * @return array
+     */
     public function addDataToNavbar()
     {
-        return array('order' => $this->orderSessionManager->getOrderFromSession());
+        return ['order' => $this->orderSessionManager->getOrderFromSession()];
     }
 
+    /**
+     * @return array
+     */
     public function addDataToFooter()
     {
-        return array('order' => $this->orderSessionManager->getOrderFromSession());
+        return ['order' => $this->orderSessionManager->getOrderFromSession()];
     }
 
 }
