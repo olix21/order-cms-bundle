@@ -34,7 +34,7 @@ class CheckoutController extends Controller
      */
     public function billingAction(Address $address = null, Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         if ($order->countProducts() > 0) {
 
@@ -99,7 +99,7 @@ class CheckoutController extends Controller
      */
     public function shippingAction(Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         if ($order->countProducts() > 0) {
 
@@ -154,7 +154,7 @@ class CheckoutController extends Controller
      */
     public function thirdPersonShippingAction(Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         $em = $this->getDoctrine()->getManager();
         $smr = $em->getRepository(ShippingMethod::class);
@@ -242,7 +242,7 @@ class CheckoutController extends Controller
      */
     public function shippingMethodAction(Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -281,7 +281,7 @@ class CheckoutController extends Controller
 
     private function autoSelectShippingOption()
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -307,7 +307,7 @@ class CheckoutController extends Controller
      */
     public function overviewAction()
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         if ($order->countProducts() > 0) {
 

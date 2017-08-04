@@ -60,4 +60,12 @@ class BasketManager
     {
         $this->orderElementManager->countProductQuantity($this->sessionOrderHandler->getOrderFromSession(), $product);
     }
+
+    /**
+     * @return \Dywee\OrderBundle\Entity\BaseOrder|mixed
+     */
+    public function getBasket()
+    {
+        return $this->sessionOrderHandler->getOrderFromSession();
+    }
 }
