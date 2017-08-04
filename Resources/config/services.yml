@@ -66,6 +66,11 @@ services:
         arguments: [ '@dywee_order_cms.order_session_handler' ]
 
 
+    dywee_order_cms.basket_manager:
+        class: Dywee\OrderCMSBundle\Service\BasketManager
+        arguments: ['@dywee_order.order_element_manager', '@dywee_order_cms.order_session_handler']
+
+
     ###########################
     #                         #
     #        ADMIN CMS        #

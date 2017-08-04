@@ -36,7 +36,9 @@ class SessionOrderHandler
         $order = $this->session->get('order');
 
         if (!$order) {
-            return $this->newOrder();
+            $order = $this->newOrder();
+            $this->em->persist($order);
+            return $order;
         }
 
         $order = $this->em->getRepository('DyweeOrderBundle:BaseOrder')->findOneById($order->getId());

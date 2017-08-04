@@ -34,3 +34,7 @@ address:
 order:
     dashboard:
         stat: Statistiques des commandes
+
+basket:
+    review: Récapitulatif
+    contains: Votre panier contient

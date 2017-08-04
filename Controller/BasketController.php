@@ -114,21 +114,18 @@ class BasketController extends Controller
      */
     public function addAction(BaseProduct $product, $quantity = 1, Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $basketManager = $this->get('dywee_order_cms.basket_manager');
+        $basketManager->addProduct($product, $quantity);
 
-        $order->addProduct($product, $quantity);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($order);
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $order->getQuantityForProduct($product)]]);
-        } else {
-            $request->getSession()->set('bypassBasketEvents', true);
-
-            return $this->redirect($this->generateUrl('basket_view'));
+            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $basketManager->countProductQuantity($product)]]);
         }
+
+        $request->getSession()->set('bypassBasketEvents', true);
+
+        return $this->redirect($this->generateUrl('basket_view'));
     }
 
     /**
@@ -143,14 +140,10 @@ class BasketController extends Controller
      */
     public function deleteAction(BaseProduct $product, Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $basketManager = $this->get('dywee_order_cms.basket_manager');
+        $basketManager->removeProduct($product);
 
-
-        $order->removeProduct($product);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($order);
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         $request->getSession()->set('bypassBasketEvents', true);
 
