@@ -3,10 +3,12 @@
 namespace Dywee\OrderCMSBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class SessionOrderHandler
 {
@@ -16,16 +18,21 @@ class SessionOrderHandler
     /** @var EntityManager */
     private $em;
 
+    /** @var TokenStorage */
+    private $tokenStorage;
+
     /**
      * SessionOrderHandler constructor.
      *
      * @param EntityManager $em
      * @param Session       $session
+     * @param TokenStorage  $tokenStorage
      */
-    public function __construct(EntityManager $em, Session $session)
+    public function __construct(EntityManager $em, Session $session, TokenStorage $tokenStorage)
     {
         $this->em = $em;
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -35,20 +42,18 @@ class SessionOrderHandler
     {
         $order = $this->session->get('order');
 
-        if (!$order) {
-            $order = $this->newOrder();
-            $this->em->persist($order);
-            return $order;
-        }
-
-        $order = $this->em->getRepository('DyweeOrderBundle:BaseOrder')->findOneById($order->getId());
-
         if ($order) {
-            return $order;
+            // TODO is it really needed?
+            $order = $this->em->getRepository('DyweeOrderBundle:BaseOrder')->find($order->getId());
+
+            if ($order) {
+                return $order;
+            }
         }
 
-        return $this->newOrder();
+        $order = $this->newOrder();
 
+        return $order;
     }
 
     /**
@@ -63,13 +68,31 @@ class SessionOrderHandler
         // TODO: rendre dynamique via les paramètres
         $order->setIsPriceTTC($this->isPriceTTC());
 
+        $this->tryToAddCustomer($order);
+
         if ($persist) {
             $this->em->persist($order);
-            $this->em->flush();
+            $this->em->flush($order);
         }
         $this->session->set('order', $order);
 
         return $order;
+    }
+
+    /**
+     * @param BaseOrderInterface $baseOrder
+     *
+     * @return bool
+     */
+    public function tryToAddCustomer(BaseOrderInterface $baseOrder)
+    {
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() && $this->tokenStorage->getToken()->getUser() instanceof CustomerInterface) {
+            $baseOrder->setCustomer($this->tokenStorage->getToken()->getUser());
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
