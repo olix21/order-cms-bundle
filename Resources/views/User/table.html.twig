@@ -11,7 +11,7 @@
                 <th>Statut Paiement</th>
                 <th>Statut</th>
                 <th>Total</th>
-                <th>Commande</th>
+                <th>Date</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -21,15 +21,14 @@
                     <td>{{ loop.index }}</td>
                     <td><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></td>
                     <td><a href="{{ path('invoice_admin_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></td>
-                    {#<td>
-                            {{ order.paymentState|trans }}
-                    </td>#}
+                    <td>
+                            {{ order.paymentStatus|trans }}
+                    </td>
                     <td>
                         {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
                     </td>
                     <td>{{ order.totalPrice|number_format(2) }}€</td>
                     <td>{{ order.createdAt|date('d/m/Y') }}</td>
-                    <td>{{ order.endAt|date('d/m/Y') }}</td>
                     <td>
                         <div class="btn-group btn-group-xs">
                             <a href="{{ path('order_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
