@@ -24,7 +24,8 @@ class OrderCMSAdminSidebarHandler
      */
     public function getSideBarMenuElement()
     {
-        $menu = [
+
+       return [
             'key'      => 'order',
             'children' => [
                 [
@@ -34,7 +35,5 @@ class OrderCMSAdminSidebarHandler
                 ],
             ]
         ];
-
-        return $menu;
     }
 }
