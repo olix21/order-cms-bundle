@@ -1,1 +1,65 @@
 {% extends 'DyweeOrderCMSBundle::userAdmin.html.twig' %}
+
+{% block body %}
+
+    <div class="title-heading">
+        <div class="pull-right">
+            <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la
+                liste des commandes</a>
+            {#<a href="{{ path('dywee_order_print', {id: order.id}) }}" class="btn btn-default" onclick="changeFa(this)"><i class="fa fa-file-pdf-o"></i> PDF</a>
+            <a href="{{ path('dywee_order_send', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-envelope"></i> Envoyer par email</a>#}
+        </div>
+        <h1>Détail de la commande {{ order.invoiceReference }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            {% include 'DyweeOrderBundle:Fragment:overview_panel.html.twig' %}
+        </div>
+        <div class="col-md-4">
+            {% include 'DyweeOrderBundle:Fragment:shipments_panel.html.twig' %}
+        </div>
+    </div>
+
+    {% if not order.shippingMessage == '' %}
+        {% include 'DyweeOrderBundle:Fragment:shipping_message_panel.html.twig' %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
+                <div class="panel-body">
+                    {% if order.billingAddress is not null %}
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.billingAddress} %}
+                    {% else %}
+                        {{ 'address.notDefined'|trans }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Adresse de livraison</h3></div>
+                <div class="panel-body">
+                    {% if order.shippingAddress is not null %}
+                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.shippingAddress} %}
+                    {% else %}
+                        {{ 'address.notDefined'|trans }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Moyen de livraison</h3></div>
+                <div class="panel-body">
+                    {% if order.shippingMethod %}
+                        <p>{{ order.shippingMethod.name }} ({{ order.shippingMethod.price|number_format(2) }}€)</p>
+                    {% else %}
+                        <p>Pas de méthode de livraison renseignée</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
