@@ -85,16 +85,13 @@ class BasketController extends Controller
      */
     public function removeAction(BaseProduct $product, $quantity, Request $request)
     {
-        $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
+        $basketManager = $this->get('dywee_order_cms.basket_manager');
+        $basketManager->removeProduct($product, $quantity);
 
-        $order->addProduct($product, $quantity);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($order);
-        $em->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $order->getQuantityForProduct($product)]]);
+            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $basketManager->countProductQuantity($product)]]);
         } else {
             $request->getSession()->set('bypassBasketEvents', true);
 

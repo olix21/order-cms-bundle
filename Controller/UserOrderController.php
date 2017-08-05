@@ -17,7 +17,7 @@ class UserOrderController extends Controller
      */
     public function listAction()
     {
-        $orders = $this->getDoctrine()->getRepository(BaseOrder::class)->findByBillingUser($this->getUser());
+        $orders = $this->getDoctrine()->getRepository(BaseOrder::class)->findByCustomer($this->getUser());
 
         return $this->render('DyweeOrderCMSBundle:User:list.html.twig', ['orders' => $orders]);
     }

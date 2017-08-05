@@ -8,11 +8,8 @@
                 <th>#</th>
                 <th>Réference</th>
                 <th><i class="fa fa-file-text"></i></th>
-                <th>Acheteur</th>
-                <th>Receveur</th>
                 <th>Statut Paiement</th>
                 <th>Statut</th>
-                <th><i class="fa fa-envelope-o"></i></th>
                 <th>Total</th>
                 <th>Commande</th>
                 <th>Actions</th>
@@ -21,60 +18,23 @@
             <tbody>
             {% for order in orders %}
                 <tr>
-                    <td><small>{{ order.id }}</small></td>
-                    <td><small>{{ order.reference }}</small></td>
-                    <td><small>{{ order.invoiceReference }}</small></td>
-                    <td><small>
-                            {% if order.billingAddress is not null %}
-                                {{ order.billingAddress.lastName }}
-                            {% else %}
-                                <span class="label label-default">NC</span>
-                            {% endif %}
-                        </small></td>
-                    <td><small>
-                            {% if order.shippingAddress is not null %}
-                                {{ order.shippingAddress.lastName }}
-                            {% else %}
-                                <span class="label label-default">NC</span>
-                            {% endif %}
-                        </small></td>
-                    <td><small>
-                            {% if order.paymentState == 0 %}
-                                <span class="label label-info">En attente de paiement</span>
-                            {% elseif order.paymentState == 1 %}
-                                <span class="label label-primary">Accompte donné</span>
-                            {% elseif order.paymentState == 2 %}
-                                <span class="label label-success">Payé</span>
-                            {% elseif order.paymentState == 3 %}
-                                <span class="label label-default">Remboursé</span>
-                            {% else %}
-                                <span class="label label-danger">Erreur</span>
-                            {% endif %}
-                        </small>
+                    <td>{{ loop.index }}</td>
+                    <td><a href="{{ path('order_view', {id: order.id}) }}" class="link-unstyled" >{{ order.reference }}</a></td>
+                    <td><a href="{{ path('invoice_admin_view', {id: order.id}) }}" class="link-unstyled" >{{ order.invoiceReference }}</a></td>
+                    {#<td>
+                            {{ order.paymentState|trans }}
+                    </td>#}
+                    <td>
+                        {% include 'DyweeOrderBundle:Order:state_label.html.twig' %}
                     </td>
-                    <td><small>
-                            {% if order.state == 0 %}
-                                <span class="label label-warning">Annulée</span>
-                            {% elseif order.state == 1 %}
-                                <span class="label label-default">En attente</span>
-                            {% elseif order.state == 2 %}
-                                <span class="label label-success">Active</span>
-                            {% elseif order.state == 3 %}
-                                <span class="label label-info">Terminée</span>
-                            {% elseif order.state == -1 %}
-                                <span class="label label-warning">En session</span>
-                            {% else %}
-                                <span class="label label-danger">Erreur</span>
-                            {% endif %}
-                        </small>
-                    </td>
-                    <td><small>{% if order.shippingMessage != '' %} <i class="fa fa-envelope"></i> {% endif %}</small></td>
-                    <td><small>{{ order.totalPrice|number_format(2) }}€</small></td>
-                    <td><small>{{ order.creationDate|date('d/m/Y') }}</small></td>
-                    <td class="actions"><small>
-                            <a href="{{ path('dywee_order_view', {id: order.id}) }}"><i class="fa fa-eye"></i> </a>
-                            <a href="{{ path('dywee_order_invoice_download', {idOrder: order.id}) }}"><i class="fa fa-file-text"></i> </a>
-                        </small>
+                    <td>{{ order.totalPrice|number_format(2) }}€</td>
+                    <td>{{ order.createdAt|date('d/m/Y') }}</td>
+                    <td>{{ order.endAt|date('d/m/Y') }}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <a href="{{ path('order_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-eye"></i> </a>
+                            <a href="{{ path('invoice_view', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-file-text"></i> </a>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

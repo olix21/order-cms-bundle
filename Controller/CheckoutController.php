@@ -274,8 +274,8 @@ class CheckoutController extends Controller
         $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS, $checkoutStatEvent);
 
         return $this->render('DyweeOrderCMSBundle:Shipping:shipping_methods.html.twig', [
-            'order'            => $order,
-            'form'             => $form->createView()
+            'order' => $order,
+            'form'  => $form->createView()
         ]);
     }
 
@@ -308,6 +308,12 @@ class CheckoutController extends Controller
     public function overviewAction()
     {
         $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
+
+        if ($this->get('dywee_order_cms.order_session_handler')->tryToAddCustomer($order)) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+        }
+
 
         if ($order->countProducts() > 0) {
 
