@@ -37,4 +37,5 @@ order:
 
 basket:
     review: Récapitulatif
-    contains: '{0} Votre panier est vide| {1} contient 1 article|]1, inf[ Votre panier contient %count% articles'
+    contains: '{0} Votre panier est vide| {1} Votre panier contient 1 article|]1, inf[ Votre panier contient %count% articles'
+    next: Suivant

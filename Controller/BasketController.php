@@ -33,23 +33,9 @@ class BasketController extends Controller
         if ($order) {
             $data['order'] = $order;
 
-            if ($order->countProducts() > 0) {
-
-                $form = $this->createFormBuilder([])
-                    ->add('cuConfirmation', CheckboxType::class)
-                    ->add('Suivant', SubmitType::class)
-                    /*->add('country', EntityType::class, array(
-                        'class' => 'DyweeAddressBundle:Country',
-                        'choice_label' => 'name'
-                    ))*/
-                    ->getForm();
-
-                if ($form->handleRequest($request)->isValid()) {
-                    return $this->redirect($this->generateUrl('checkout_billing'));
-                }
-
-                $data['form'] = $form->createView();
-            } else $data['btn'] = '<button disabled="disabled" class="btn btn-default">Votre panier est vide</button>';
+            if ($order->countProducts() == 0) {
+                $data['btn'] = '<button disabled="disabled" class="btn btn-default">Votre panier est vide</button>';
+            }
 
             if ($request->getSession()->get('bypassBasketEvents')) {
                 $request->getSession()->set('bypassBasketEvents', false);

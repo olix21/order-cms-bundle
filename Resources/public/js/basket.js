@@ -145,4 +145,9 @@ $(document).ready(function(){
             }
         });
     }
+
+    function validForm()
+    {
+        $("form").submit();
+    }
 });
