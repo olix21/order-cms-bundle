@@ -3,19 +3,13 @@
 {% block body %}
 
     <div class="title-heading">
-        <div class="pull-right">
-            <a href="{{ path('order_table') }}" class="btn btn-default"><i class="fa fa-angle-left"></i> Retour à la
-                liste des commandes</a>
-            {#<a href="{{ path('dywee_order_print', {id: order.id}) }}" class="btn btn-default" onclick="changeFa(this)"><i class="fa fa-file-pdf-o"></i> PDF</a>
-            <a href="{{ path('dywee_order_send', {id: order.id}) }}" class="btn btn-default"><i class="fa fa-envelope"></i> Envoyer par email</a>#}
-        </div>
         <h1>Détail de la commande {{ order.invoiceReference }}</h1>
     </div>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-7 col-md-12">
             {% include 'DyweeOrderBundle:Fragment:overview_panel.html.twig' %}
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-5 col-md-12">
             {% include 'DyweeOrderBundle:Fragment:shipments_panel.html.twig' %}
         </div>
     </div>
@@ -25,7 +19,7 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
                 <div class="panel-body">
@@ -37,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Adresse de livraison</h3></div>
                 <div class="panel-body">
@@ -49,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">Moyen de livraison</h3></div>
                 <div class="panel-body">

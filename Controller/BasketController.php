@@ -28,14 +28,7 @@ class BasketController extends Controller
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        $data = [];
-
         if ($order) {
-            $data['order'] = $order;
-
-            if ($order->countProducts() == 0) {
-                $data['btn'] = '<button disabled="disabled" class="btn btn-default">Votre panier est vide</button>';
-            }
 
             if ($request->getSession()->get('bypassBasketEvents')) {
                 $request->getSession()->set('bypassBasketEvents', false);
@@ -44,7 +37,7 @@ class BasketController extends Controller
             }
         }
 
-        return $this->render('DyweeOrderCMSBundle:Basket:basket.html.twig', $data);
+        return $this->render('DyweeOrderCMSBundle:Basket:basket.html.twig', ['order' => $order]);
     }
 
     /**

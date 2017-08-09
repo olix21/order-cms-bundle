@@ -13,7 +13,7 @@
 
 
     <div class="row">
-        <div class="col-xs-12 col-md-9">
+        <div class="col-lg-9">
 
             <div class="panel panel-default">
                 {% if order is defined %}
@@ -48,7 +48,7 @@
                                         </div>
                                     </td>
                                     <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
-                                    <td>
+                                    <td class="col-md-2 col-xs-6">
                                         <div class="input-group">
                                 <span class="input-group-btn">
                                     <a href="{{ path('basket_remove_product', {id: orderElement.product.id}) }}"
@@ -60,7 +60,6 @@
                                                    value="{{ orderElement.quantity }}"
                                                    data-product="{{ orderElement.product.id }}"
                                                    data-quantity="{{ orderElement.quantity }}"
-                                                   style="width: 80px"
                                             >
                                             <span class="input-group-btn">
                                     <a href="{{ path('basket_add_product', {id: orderElement.product.id}) }}"
@@ -78,53 +77,33 @@
                             </tbody>
                         </table>
                         <div class="panel-footer">
-                            <a type="button" href="{{ path('cms_homepage') }}"
-                               class="btn btn-default">{{ 'Continuer mes achats'|trans }}</a>
+                            {% if btn is defined %}
+                                <div class="col-md-8 pull-right">
+                                    {{ btn|raw }}
+                                </div>
+                            {% else %}
+                                <a href="{{ path('cms_homepage') }}"
+                                   class="btn btn-default"><i class="fa fa-angle-left"></i> {{ 'Continuer mes achats'|trans }}</a>
+                            {% endif %}
+
                         </div>
                     </div>
 
-                    {% if form is defined %}
-
-                        {{ form_start(form) }}
-
-                        {{ form_errors(form) }}
-
-                        <div class="col-md-3">
-
-                        </div>
-                        <div class="col-md-3 text-right">
-
-                            {{ form_widget(form.cuConfirmation, {label: 'J\'accepte les conditions d\'utilisation'}) }}
-
-                            <p><a href="{{ path('page_view', {data: 'conditions-generales'}) }}" target="_blank">>
-                                    {{ 'Les conditions d\'utilisation'|trans }}
-                                </a></p>
-
-                        </div>
-
-                        {{ form_rest(form) }}
-                        {{ form_end(form) }}
-
-                    {% elseif btn is defined %}
-                        <div class="col-md-8 pull-right">
-                            {{ btn|raw }}
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <p>{{ 'Votre panier est vide'|trans }}</p>
                 {% endif %}
             </div>
 
         </div>
 
-        <div class="col-md-3">
+        <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>{% transchoice order.countProducts %} basket.contains {% endtranschoice %}</p>
-                    <p><span class="h3"> {{ 'checkout.total_vat'|trans|capitalize }}</span> <span class="h4 pull-right">{{ order.priceVatIncl|number_format(2) }}€</span> </p>
-                    <a href="{{ path('checkout_billing') }}"
-                       class="btn btn-lg btn-success pull-right btn-block">{{ 'basket.next'|trans }} <i
-                                class="fa fa-angle-right" style="margin-left: 10px"></i></a>
+                    <p><span class="h3"> {{ 'checkout.total_vat'|trans|capitalize }}</span> <span
+                                class="h4 pull-right">{{ order.priceVatIncl|number_format(2) }}€</span></p>
+                    {% set class = order.orderElements|length < 1 ? 'disabled' : '' %}
+                    <p><a href="{{ path('checkout_billing') }}"
+                          class="btn btn-lg btn-success pull-right btn-block {{ class }}">{{ 'basket.next'|trans }} <i
+                                    class="fa fa-angle-right" style="margin-left: 10px"></i></a></p>
                 </div>
             </div>
         </div>
