@@ -14,7 +14,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "dywee/order-bundle": "1.0-dev",
+    "dywee/order-bundle": "dev-master",
     "stof/doctrine-extensions-bundle": "^1.2",
     "vich/uploader-bundle": "^1.0",
     "beberlei/DoctrineExtensions": "^1.0"
