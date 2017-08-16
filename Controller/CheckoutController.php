@@ -8,6 +8,7 @@ use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderBundle\Entity\ShippingMethod;
 use Dywee\OrderBundle\Form\ShippingOptionsType;
+use Dywee\OrderBundle\Service\OrderVirtualizationManager;
 use Dywee\OrderCMSBundle\DyweeOrderCMSEvent;
 use Dywee\OrderCMSBundle\Event\CheckoutStatEvent;
 use Dywee\OrderCMSBundle\Form\ShippingAddressType;
@@ -74,12 +75,11 @@ class CheckoutController extends Controller
 
                 $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::VALID_BILLING);
 
-                if ($this->get('dywee_order.virtualization_manager')->isFullyVirtual($order)) {
+                if ($this->get(OrderVirtualizationManager::class)->isFullyVirtual($order)) {
                     //handle free shipping
                     return $this->redirectToRoute('checkout_overview');
-                } else {
-                    return $this->redirectToRoute('checkout_shipping');
                 }
+                return $this->redirectToRoute('checkout_shipping');
             }
 
         } else {
