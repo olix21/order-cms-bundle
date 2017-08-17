@@ -64,7 +64,7 @@ class SessionOrderHandler
     public function newOrder($persist = true)
     {
         $order = new BaseOrder();
-        $order->setState(BaseOrderInterface::STATE_IN_SESSION);
+        $order->setStatus(BaseOrderInterface::STATE_IN_SESSION);
         // TODO: rendre dynamique via les paramètres
         $order->setIsPriceTTC($this->isPriceTTC());
 
