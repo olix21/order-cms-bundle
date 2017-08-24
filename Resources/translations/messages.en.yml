@@ -1,0 +1,42 @@
+checkout:
+    wizard:
+        card: basket
+        billing: billing
+        shipping: shipping
+        shipping_method: shipping method
+        review: review
+        payment: payment
+
+    table:
+        product: products
+        unit_price: unit price
+        quantity: quantity
+        total: total
+
+    total_vat_excl: total VAT excluded
+    vat: VAT
+    shipping_fee_vat: shipping fee (VAT included)
+    shipping_fee_vat_excl: shipping fee (vat excluded)
+    total_vat: total VAT included
+
+    recap: Order Overview
+    contains: Your basket contains
+
+    billing_address: billing address
+    shipping_address: shipping address
+    shipping_method: shipping method
+
+address:
+    form:
+        shipping_message: shipping message
+        other: additionnal informations
+
+order:
+    dashboard:
+        stat: Order stats
+
+basket:
+    review: overview
+    # TODO not working
+    contains: '{0} Votre panier est vide| {1} Votre panier contient 1 article| ]1, inf[ Votre panier contient %count% articles'
+    next: next
