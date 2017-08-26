@@ -24,8 +24,8 @@ class PageElementModalHandler
                 'icon'           => 'beer',
                 'value'          => 'Gallerie de produit',
                 'modalLabel'     => 'Choisissez une gallerie de produit à afficher sur la page',
-                'routeName'      => false,//'cms_customForm_json',
-                'routeForAdding' => false, //'cms_customForm_add',
+                'routeName'      => false,//'custom_form_json',
+                'routeForAdding' => false, //'custom_form_add',
                 'active'         => true
             ],
 
