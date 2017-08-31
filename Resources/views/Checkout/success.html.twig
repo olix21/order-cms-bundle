@@ -13,9 +13,7 @@
 
                 <p>Votre référence de commande est le {{ order.reference }}</p>
 
-                <ul class="list-unstyled">
-                    <li>> <a href="{{ path('member_order_list') }}">Liste de vos commandes</a></li>
-                </ul>
+                {% include 'DyweeOrderCMSBundle:Checkout:success_links.html.twig' %}
 
             </div>
             <div class="panel-footer">
