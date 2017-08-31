@@ -38,5 +38,6 @@ order:
 basket:
     review: Récapitulatif
     # TODO not working
-    contains: '{0} Votre panier est vide| {1} Votre panier contient 1 article| ]1, inf[ Votre panier contient %count% articles'
+    contains: '{0} Votre panier est vide|{1} Votre panier contient 1 article|]1,Inf[ Votre panier contient %count% articles'
+    empty: Votre panier est vide
     next: Suivant
