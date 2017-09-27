@@ -6,5 +6,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {# old way #}
     <link href="{{ asset('bundles/dyweeordercms/plugins/wizard/css/style.css') }}" rel="stylesheet">
+    {# webpack #}
+    <link href="{{ asset('build/css/checkout.css') }}" rel="stylesheet">
 {% endblock %}

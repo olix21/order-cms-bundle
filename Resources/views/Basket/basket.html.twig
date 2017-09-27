@@ -9,12 +9,13 @@
 {% block body %}
     {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
 
-    <h1>{{ 'basket.review'|trans|capitalize }}</h1>
-
     <div class="row">
         <div class="col-lg-9">
 
-            <div class="panel panel-default">
+            <div class="card">
+                <div class="card-header">
+                    {{ 'basket.review'|trans|capitalize }}
+                </div>
                 {% if order is defined %}
                     {% if order.orderElements|length > 0 %}
                         <div class="table-responsive">
@@ -76,7 +77,7 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            <div class="panel-footer">
+                            <div class="card-footer">
                                 {% if btn is defined %}
                                     <div class="col-md-8 pull-right">
                                         {{ btn|raw }}
@@ -89,7 +90,7 @@
                             </div>
                         </div>
                     {% else %}
-                        <div class="panel-body">
+                        <div class="card-body">
                             <p>{{ 'basket.empty'|trans }}</p>
 
                             <hr>
@@ -110,11 +111,11 @@
         </div>
 
         <div class="col-lg-3">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card">
+                <div class="card-body">
                     <p>{% transchoice order.countProducts %} basket.contains {% endtranschoice %}</p>
                     <p><span class="h3"> {{ 'checkout.total_vat'|trans|capitalize }}</span> <span
-                                class="h4 pull-right">{{ order.priceVatIncl|number_format(2) }}€</span></p>
+                                class="h4 pull-right" style="margin-top: 5px">{{ order.priceVatIncl|number_format(2) }}€</span></p>
                     {% set class = order.orderElements|length < 1 ? 'disabled' : '' %}
                     <p><a href="{{ path('checkout_billing') }}"
                           class="btn btn-lg btn-success pull-right btn-block {{ class }}">{{ 'basket.next'|trans }} <i
