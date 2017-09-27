@@ -17,18 +17,16 @@
 {% endspaceless %}{% endset %}
 
 {% block body %}
+    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    
     <div class="row">
-        <div class="col-xs-12">
-            {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
-        </div>
-
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
             <div class="{{ columnClass }}">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">{{ 'Commander avec mon compte'|trans }}</h2>
+                <div class="card">
+                    <div class="card-header">
+                        {{ 'Commander avec mon compte'|trans }}
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         {% if app.user %}
                             {{ render(controller('DyweeOrderCMSBundle:RegisteredCheckout:addressPicker')) }}
                         {% else %}
@@ -41,11 +39,11 @@
 
         {% if orderConnexionPermission == 'anon' or (orderConnexionPermission == 'both' and app.user is null) %}
             <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">{{ 'Commander sans créer de compte'|trans }}</h2>
+                <div class="card">
+                    <div class="card-header">
+                        {{ 'Commander sans créer de compte'|trans }}
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
                     </div>
                 </div>
