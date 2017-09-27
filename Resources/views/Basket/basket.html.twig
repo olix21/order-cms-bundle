@@ -32,31 +32,29 @@
                                 {% for orderElement in order.orderElements %}
                                     <tr>
                                         <td>
-                                            <div class="row">
-                                                <div class="col-xs-3">
-                                                    {% if orderElement.product.pictures|length > 0 %}
-                                                        {% set picture = orderElement.product.pictures|first %}
-                                                        <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
-                                                            <img src="{{ asset('images/products/' ~ picture.imageName) }}"
-                                                                 alt="{{ orderElement.product.name }}"
-                                                                 class="img-responsive"/>
-                                                        </a>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="col-xs-9">
-                                                    <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>
-                                                </div>
+                                            <div class="col-xs-3">
+                                                {% if orderElement.product.pictures|length > 0 %}
+                                                    {% set picture = orderElement.product.pictures|first %}
+                                                    <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">
+                                                        <img src="{{ asset('images/products/' ~ picture.imageName) }}"
+                                                             alt="{{ orderElement.product.name }}"
+                                                             class="img-responsive"/>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <a href="{{ path('product_cms_view', {id: orderElement.product.id}) }}">{{ orderElement.product.name }}</a>
                                             </div>
                                         </td>
                                         <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
-                                        <td class="col-md-2 col-xs-6">
+                                        <td>
                                             <div class="input-group">
                                 <span class="input-group-btn">
                                     <a href="{{ path('basket_remove_product', {id: orderElement.product.id}) }}"
                                        data-product="{{ orderElement.product.id }}"
                                        class="btn btn-default removeOne">-</a>
                                 </span>
-                                                <input type="number" class="form-control basket-control" min="0"
+                                                <input type="number" class="" min="0"
                                                        step="1"
                                                        value="{{ orderElement.quantity }}"
                                                        data-product="{{ orderElement.product.id }}"
@@ -68,7 +66,7 @@
                                 </span>
                                             </div>
                                         </td>
-                                        <td colspan="quantity-control">
+                                        <td>
                                             <a href="{{ path('basket_delete_product', {id: orderElement.product.id}) }}"
                                                class="pull-right"><i class="fa fa-trash-o"></i></a>
                                         </td>
@@ -115,7 +113,8 @@
                 <div class="card-body">
                     <p>{% transchoice order.countProducts %} basket.contains {% endtranschoice %}</p>
                     <p><span class="h3"> {{ 'checkout.total_vat'|trans|capitalize }}</span> <span
-                                class="h4 pull-right" style="margin-top: 5px">{{ order.priceVatIncl|number_format(2) }}€</span></p>
+                                class="h4 pull-right" style="margin-top: 5px">{{ order.priceVatIncl|number_format(2) }}
+                            €</span></p>
                     {% set class = order.orderElements|length < 1 ? 'disabled' : '' %}
                     <p><a href="{{ path('checkout_billing') }}"
                           class="btn btn-lg btn-success pull-right btn-block {{ class }}">{{ 'basket.next'|trans }} <i
