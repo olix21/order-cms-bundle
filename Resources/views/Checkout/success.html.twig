@@ -2,11 +2,11 @@
 
 {% block body %}
     <div class="col-md-8 col-md-offset-2 m-t-lg">
-        <div class="panel panel-default">
-            <div class="panel-heading with-border">
-                <h1 class="panel-title">Confirmation de votre commande</h1>
+        <div class="card">
+            <div class="card-header">
+                Confirmation de votre commande
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <p>Votre commande a bien été enregistrée, un email reprenant le détail de votre commande vous a été envoyé.</p>
 
                 <p>Si vous ne voyez rien venir de notre part, soyez attentif, il se pourrait que notre courrier se trouve dans vos "indésirables"</p>
@@ -16,7 +16,7 @@
                 {% include 'DyweeOrderCMSBundle:Checkout:success_links.html.twig' %}
 
             </div>
-            <div class="panel-footer">
+            <div class="card-footer">
                 <p><a href="{{ path('homepage') }}">Page d'accueil</a></p>
             </div>
         </div>

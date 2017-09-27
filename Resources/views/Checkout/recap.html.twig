@@ -1,6 +1,15 @@
 {# Dywee\OrderBundle\Resources\View\Basket\recap.html.twig #}
 
-{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card {
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
 
 {% block metaTitle %}
     {{ 'Recapitulatif de votre commande'|trans }} {{ parent() }}
@@ -10,13 +19,13 @@
 
 {% block body %}
 
-    <div class="spacer"></div>
-
     {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
 
     <h1>{{ 'checkout.recap'|trans }}</h1>
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{ 'Récapitulatif de la commande'|trans }} - <small>ref: {{ order.reference }}</small></h3></div>
+    <div class="card">
+        <div class="card-header">{{ 'Récapitulatif de la commande'|trans }} -
+            <small>ref: {{ order.reference }}</small>
+            </h3></div>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -30,16 +39,15 @@
             {% for orderElement in order.orderElements %}
                 <tr>
                     <td>
-                        <div class="row">
-                            <div class="col-xs-2">
-                                {% if orderElement.product.pictures|length > 0 %}
-                                    {% set picture = orderElement.product.pictures|first %}
-                                    <img src="{{ asset('images/products/' ~ picture.imageName) }}" alt="{{ orderElement.product.name }}" class="img-responsive"/>
-                                {% endif %}
-                            </div>
-                            <div class="col-xs-9">
-                                {{ orderElement.product.name }}
-                            </div>
+                        <div class="col-xs-2">
+                            {% if orderElement.product.pictures|length > 0 %}
+                                {% set picture = orderElement.product.pictures|first %}
+                                <img src="{{ asset('images/products/' ~ picture.imageName) }}"
+                                     alt="{{ orderElement.product.name }}" class="img-responsive"/>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ orderElement.product.name }}
                         </div>
                     </td>
                     <td>{{ orderElement.unitPrice|number_format(2) }}€</td>
@@ -68,29 +76,29 @@
     </div>
     <div class="row">
         <div class="col-md-4 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.billing_address'|trans|capitalize }}</h3></div>
-                <div class="panel-body">
+            <div class="card">
+                <div class="card-header">{{ 'checkout.billing_address'|trans|capitalize }}</div>
+                <div class="card-body">
                     {% set address = order.billingAddress %}
                     {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                 </div>
             </div>
         </div>
         <div class="col-md-4 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.shipping_address'|trans|capitalize }}</h3></div>
-                <div class="panel-body">
+            <div class="card">
+                <div class="card-header">{{ 'checkout.shipping_address'|trans|capitalize }}</div>
+                <div class="card-body">
                     {% set address = order.shippingAddress %}
                     {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
                 </div>
             </div>
         </div>
         <div class="col-md-4 col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.shipping_method'|trans|capitalize }}</h3></div>
-                <div class="panel-body">
+            <div class="card">
+                <div class="card-header">{{ 'checkout.shipping_method'|trans|capitalize }}</div>
+                <div class="card-body">
                     {% if order.shippingMethod is not null %}
-                    {{ order.shippingMethod.name }}
+                        {{ order.shippingMethod.name }}
                     {% else %}
                         {{ 'no_shipping_method'|trans }}
                     {% endif %}
@@ -98,22 +106,20 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         {% if not order.shippingMessage == '' %}
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'checkout.shipping_message'|trans }}</h3></div>
-                <div class="panel-body">
-                    {{ order.shippingMessage }}
+            <div class="col-xs-12">
+                <div class="card">
+                    <div class="card-header">{{ 'checkout.shipping_message'|trans }}</div>
+                    <div class="card-body">
+                        {{ order.shippingMessage }}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
         <div class="col-xs-12">
-            <div class="panel panel-default" id="payment">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'Choix du paiement'|trans }}</h3></div>
-                <div class="panel-body">
+            <div class="card" id="payment">
+                <div class="card-header">{{ 'Choix du paiement'|trans }}</div>
+                <div class="card-body">
                     <a href="{{ path('order_payment_prepare') }}" class="btn btn-default">Payer</a>
                 </div>
             </div>
@@ -121,17 +127,17 @@
     </div>
 
     <script>
-        function showWaitingWheel(link)
-        {
+        function showWaitingWheel(link) {
             $(link).html('<i class="fa fa-spin fa-spinner"></i> Vous allez être redirigé vers paypal pour votre paiement. Veuillez patienter...');
         }
-        $(document).ready(function(){
+
+        $(document).ready(function () {
             var request = $.ajax({
                 url: '#'{#{{ path('dywee_paypal_ajax') }}'#},
                 type: 'post',
                 dataType: 'json',
-                success: function(data, textStatus, jqXHR){
-                    if(data.type == 'success') {
+                success: function (data, textStatus, jqXHR) {
+                    if (data.type == 'success') {
                         $("#paypalLink").attr('src', data.url).removeClass("hide");
                         $("#paypalLink2").attr('src', data.url).removeClass("hide");
                         $("#firstSpinner").addClass("hide");
@@ -142,7 +148,7 @@
                 }
             });
 
-            request.fail(function(jqXHR, textStatus) {
+            request.fail(function (jqXHR, textStatus) {
                 ('#log').html('Request failed: ' + textStatus);
             });
 
