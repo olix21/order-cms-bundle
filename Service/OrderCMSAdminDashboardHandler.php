@@ -2,11 +2,11 @@
 
 namespace Dywee\OrderCMSBundle\Service;
 
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class OrderCMSAdminDashboardHandler
 {
-    /** @var Router  */
+    /** @var RouterInterface  */
     private $router;
 
     /**
@@ -14,7 +14,7 @@ class OrderCMSAdminDashboardHandler
      *
      * @param Router $router
      */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
