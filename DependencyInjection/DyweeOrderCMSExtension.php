@@ -23,7 +23,7 @@ class DyweeOrderCMSExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
 
@@ -32,6 +32,4 @@ class DyweeOrderCMSExtension extends Extension
         $def = $container->getDefinition('dywee_order_cms.admin_sidebar_listener');
         $def->replaceArgument(1, $inSidebar);
     }
-
-
 }

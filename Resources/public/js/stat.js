@@ -8,10 +8,12 @@ var options = { month: 'long' };
 
 months['month0'] = new Intl.DateTimeFormat('fr', options).format(currentDate);
 
-for(var i=1; i<5; i++)
-    months['month'+i] = new Intl.DateTimeFormat('fr', options).format(currentDate.setMonth(currentDate.getMonth() - 1));
+for (var i = 1; i < 5; i++) {
+    months['month' + i] = new Intl.DateTimeFormat('fr', options).format(currentDate.setMonth(currentDate.getMonth() - 1));
+}
 
-function drawChart() {
+function drawChart()
+{
     var data = google.visualization.arrayToDataTable(stats);
 
     var options = {

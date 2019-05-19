@@ -36,8 +36,9 @@ class SessionStatManager
     public function getTrackingKey()
     {
         $trackingKey = $this->session->get('order_tracking_key');
-        if (!$trackingKey)
+        if (!$trackingKey) {
             return $this->setTrackingKey();
+        }
 
         return $trackingKey;
     }
@@ -49,5 +50,4 @@ class SessionStatManager
     {
         $this->session->remove('order_tracking_key');
     }
-
 }

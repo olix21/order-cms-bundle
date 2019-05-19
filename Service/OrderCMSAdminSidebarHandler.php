@@ -25,7 +25,7 @@ class OrderCMSAdminSidebarHandler
     public function getSideBarMenuElement()
     {
 
-       return [
+        return [
             'key'      => 'order',
             'children' => [
                 [

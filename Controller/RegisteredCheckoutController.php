@@ -28,5 +28,4 @@ class RegisteredCheckoutController extends Controller
 
         return $this->render('DyweeOrderCMSBundle:Address:picker.html.twig', ['form' => $this->get('dywee_address.form_handler')->createForm()->createView(), 'addresses' => $addresses]);
     }
-
 }

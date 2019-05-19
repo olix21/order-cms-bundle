@@ -51,5 +51,4 @@ class PageElementModalListener implements EventSubscriberInterface
     {
         $pageElementModalBuidlerEvent->addData($this->pageElementModalHandler->addPageElements(), Page::TYPE_HOMEPAGE);
     }
-
 }

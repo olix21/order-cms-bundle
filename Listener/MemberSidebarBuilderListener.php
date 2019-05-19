@@ -45,7 +45,7 @@ class MemberSidebarBuilderListener implements EventSubscriberInterface
      */
     public function addElementToSidebar(SidebarBuilderEvent $sidebarBuilderEvent)
     {
-        if($this->inSidebar) {
+        if ($this->inSidebar) {
             $sidebarBuilderEvent->addElement($this->memberSidebarHandler ->getSideBarMenuElement());
         }
     }
@@ -57,5 +57,4 @@ class MemberSidebarBuilderListener implements EventSubscriberInterface
     {
         return $this->inSidebar;
     }
-
 }

@@ -29,7 +29,6 @@ class BasketController extends Controller
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
         if ($order) {
-
             if ($request->getSession()->get('bypassBasketEvents')) {
                 $request->getSession()->set('bypassBasketEvents', false);
             } else {

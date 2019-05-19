@@ -37,7 +37,6 @@ class CheckoutController extends Controller
         $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         if ($order->countProducts() > 0) {
-
             // If no address provided: form
             if (!$address) {
                 $address = $order->getBillingAddress() ?? new Address();
@@ -47,14 +46,14 @@ class CheckoutController extends Controller
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
-
                     if ($this->getUser()) {
                         $address->setUser($this->getUser());
                     }
                 } else {
                     $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::DISPLAY_BILLING);
 
-                    return $this->render('DyweeOrderCMSBundle:Billing:billing.html.twig',
+                    return $this->render(
+                        'DyweeOrderCMSBundle:Billing:billing.html.twig',
                         [
                             'form'                     => $form->createView(),
                             //TODO rendre dynamique
@@ -80,13 +79,11 @@ class CheckoutController extends Controller
                 }
                 return $this->redirectToRoute('checkout_shipping');
             }
-
         } else {
             $this->addFlash('warning', 'votre session a expirée');
 
             return $this->redirectToRoute('basket_view');
         }
-
     }
 
     /**
@@ -101,7 +98,6 @@ class CheckoutController extends Controller
         $order = $this->get('dywee_order_cms.basket_manager')->getBasket();
 
         if ($order->countProducts() > 0) {
-
             $em = $this->getDoctrine()->getManager();
 
             $billingAddress = $order->getBillingAddress();
@@ -194,7 +190,9 @@ class CheckoutController extends Controller
                 $order->setDeliveryMethod('HOM');
 
                 return $this->step4Action($order, 'HomMethod');
-            } else $data['home'] = $formHome->createView();
+            } else {
+                $data['home'] = $formHome->createView();
+            }
         }
 
         //24R FORM
@@ -224,7 +222,9 @@ class CheckoutController extends Controller
                 $order->setDeliveryInfo($data['ref']);
 
                 return $this->step4Action($order, '24RMethod');
-            } else $data['mr'] = $formMR->createView();
+            } else {
+                $data['mr'] = $formMR->createView();
+            }
         }
         $data['step'] = 3;
 
@@ -314,7 +314,6 @@ class CheckoutController extends Controller
 
 
         if ($order->countProducts() > 0) {
-
             $data = ['order' => $order];
 
             //TODO a bouger dans une gestion "shipment"

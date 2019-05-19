@@ -70,10 +70,12 @@ class OrderStatManager
      */
     public function getStatsForTimeRange($beginAt = null, $endAt = null, $timeScale = 'day')
     {
-        if (!$beginAt)
+        if (!$beginAt) {
             $beginAt = new \DateTime('last month');
-        if (!$endAt)
+        }
+        if (!$endAt) {
             $endAt = new \DateTime();
+        }
 
         $osr = $this->em->getRepository('DyweeOrderCMSBundle:OrderStat');
 
@@ -100,14 +102,15 @@ class OrderStatManager
             $stats[$key] = [
                 'createdAt' => $key];
 
-            foreach ($types as $type)
+            foreach ($types as $type) {
                 $stats[$key][$type] = 0;
+            }
         }
 
-        foreach ($rawStats as $stat)
+        foreach ($rawStats as $stat) {
             $stats[$stat['createdAt']->format('d/m/Y')][$stat['type']] = $stat['total'];
+        }
 
         return $stats;
     }
-
 }

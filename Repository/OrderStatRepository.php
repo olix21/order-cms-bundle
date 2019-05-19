@@ -19,27 +19,24 @@ class OrderStatRepository extends EntityRepository
             ->andWhere('s.createdAt between :beginAt and :endAt')
             ->setParameters(array(
                     'beginAt' => $beginAt,
-                    'endAt' => $endAt)
-            )
+                    'endAt' => $endAt))
             ->orderBy('s.createdAt', 'asc');
 
         $qb->groupBy('s.type, year, month');
 
 
-        if(is_string($type))
+        if (is_string($type)) {
             $qb->where('count(s.id) as total, s.type = :type')
             ->setParameter('type', $type);
-
-        elseif(is_array($type))
-        {
+        } elseif (is_array($type)) {
             $where = '(';
             $i = 0;
-            foreach($type as $typeElement)
-            {
-                if($i > 0)
+            foreach ($type as $typeElement) {
+                if ($i > 0) {
                     $where .= ' or ';
-                $where .= 's.type = :type'.$i;
-                $qb->setParameter('type'.$i++, $typeElement);
+                }
+                $where .= 's.type = :type' . $i;
+                $qb->setParameter('type' . $i++, $typeElement);
             }
             $where .= ')';
             $qb->addSelect('count(s.id) as total');
@@ -47,8 +44,9 @@ class OrderStatRepository extends EntityRepository
         }
 
 
-        if($detail == 'day')
+        if ($detail == 'day') {
             $qb->addGroupBy('day');
+        }
 
         return $qb->getQuery()->getResult();
     }

@@ -71,5 +71,4 @@ class PageListener implements EventSubscriberInterface
     {
         $footerBuilderEvent->addData($this->pageDataHandler->addDataToFooter());
     }
-
 }

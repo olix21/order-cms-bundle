@@ -2,7 +2,8 @@
 
 namespace Dywee\OrderCMSBundle;
 
-final class DyweeOrderCMSEvent{
+final class DyweeOrderCMSEvent
+{
     const DISPLAY_BASKET            = 'dywee_order_cms.display_basket';
     const VALID_BASKET              = 'dywee_order_cms.valid_basket';
     const DISPLAY_BILLING           = 'dywee_order_cms.display_billing';

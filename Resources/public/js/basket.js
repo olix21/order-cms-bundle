@@ -34,7 +34,7 @@
  });
  }*/
 
-$(document).ready(function(){
+$(document).ready(function () {
     /*$(".removeOne").on('click', function(e){
         console.log('remove');
         e.preventDefault();
@@ -57,9 +57,9 @@ $(document).ready(function(){
     function updatePrice(radio)
     {
         var price = $(radio).attr('aria-price');
-        $("#shippingCost").html(price+'€');
+        $("#shippingCost").html(price + '€');
         var totalPrice = initPrice + parseFloat(price);
-        $("#totalprice").html(formatNumber(totalPrice)+'€');
+        $("#totalprice").html(formatNumber(totalPrice) + '€');
     }
 
     function formatNumber(number)
@@ -69,16 +69,17 @@ $(document).ready(function(){
         var x1 = x[0];
         var x2 = x.length > 1 ? '.' + x[1] : '';
         var rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1))
+        while (rgx.test(x1)) {
             x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
         return x1 + x2;
     }
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         //shippingValue(1);
     });
 
-    $("#form_country").change(function(){
+    $("#form_country").change(function () {
         //shippingValue($(this).val());
     });
 
@@ -95,9 +96,8 @@ $(document).ready(function(){
     }
 
     //Checker le nom pour modification
-    $('.basket-control').on('keyDown', function(){
-        if($(this).attr('quantity') != $(this).val())
-        {
+    $('.basket-control').on('keyDown', function () {
+        if ($(this).attr('quantity') != $(this).val()) {
             $parent = $(this).parent().parent();
             $parent.find('.quantity-control').hide();
             $parent.find('.quantity-validator').show();
@@ -105,7 +105,7 @@ $(document).ready(function(){
     });
 
 
-    $('.basket-control').on('blur', function(){
+    $('.basket-control').on('blur', function () {
 
     });
 
@@ -117,16 +117,16 @@ $(document).ready(function(){
             url: Routing.generate('basket_add_product', {id: id, quantity: quantity}),
             method: "post",
             data: {}
-        }).done(function(data){
-            if(data.type == 'success')
-            {
-
+        }).done(function (data) {
+            if (data.type == 'success') {
+            } else {
+                console.log('[BASKET] error in ajax request trying modify product quantity');
             }
-            else console.log('[BASKET] error in ajax request trying modify product quantity');
         });
     }
 
-    function processAjax($link){
+    function processAjax($link)
+    {
         let content = $link.html();
         $link.addClass('disabled').html('<i class="fa fa-spinner fa-spin"></i>');
         console.log('basket::processAjax');
@@ -134,12 +134,10 @@ $(document).ready(function(){
             url: $link.attr('href'),
             method: "post",
             data: {}
-        }).done(function(data){
-            if(data.type == 'success')
-            {
+        }).done(function (data) {
+            if (data.type == 'success') {
                 $link.removeClass('disabled').html(content);
-            }
-            else {
+            } else {
                 $link.html('Une erreur est survenue');
                 console.log('[BASKET] error in ajax request trying modify product quantity');
             }

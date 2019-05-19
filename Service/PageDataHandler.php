@@ -48,5 +48,4 @@ class PageDataHandler
     {
         return ['order' => $this->orderSessionManager->getOrderFromSession()];
     }
-
 }
