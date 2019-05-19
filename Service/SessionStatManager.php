@@ -2,19 +2,19 @@
 
 namespace Dywee\OrderCMSBundle\Service;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionStatManager
 {
-    /** @var SessionInterface */
+    /** @var Session */
     private $session;
 
     /**
      * SessionStatManager constructor.
      *
-     * @param SessionInterface $session
+     * @param Session $session
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(Session $session)
     {
         $this->session = $session;
     }

@@ -1,26 +1,5 @@
 services:
 
-    _defaults:
-        # automatically injects dependencies in your services
-        autowire: true
-        # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
-        # this means you cannot fetch services directly from the container via $container->get()
-        # if you need to do this, you can override this setting on individual services
-        public: true
-
-    Dywee\OrderCMSBundle\:
-        resource: '../../*'
-        # you can exclude directories or files
-        # but if a service is unused, it's removed anyway
-        exclude: '../../{DependencyInjection,Entity,Event,Listener,Repository,Migrations,Tests,Kernel.php}'
-
-    # controllers are imported separately to make sure they're public
-    # and have a tag that allows actions to type-hint services
-    Dywee\OrderCMSBundle\Controller\:
-        resource: '../../Controller'
-        tags: ['controller.service_arguments']
-
     ###########################
     #                         #
     #         SIDEBAR         #
@@ -38,8 +17,8 @@ services:
             - { name: kernel.event_subscriber }
 
     dywee_order_cms.member_sidebar_handler:
-        class: Dywee\OrderCMSBundle\Service\MemberSidebarHandler
-        arguments: [ '@router' ]
+            class: Dywee\OrderCMSBundle\Service\MemberSidebarHandler
+            arguments: [ '@router' ]
 
     dywee_order_cms.member_sidebar_listener:
         class: Dywee\OrderCMSBundle\Listener\MemberSidebarBuilderListener
@@ -74,7 +53,7 @@ services:
     dywee_order_cms.order_session_handler:
         class: Dywee\OrderCMSBundle\Service\SessionOrderHandler
         arguments: [ '@doctrine.orm.entity_manager', '@session', '@security.token_storage']
-#
+
 
     dywee_order_cms.navbar_listener:
             class: Dywee\OrderCMSBundle\Listener\PageListener

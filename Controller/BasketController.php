@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class BasketController extends Controller
@@ -70,7 +70,10 @@ class BasketController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $basketManager->countProductQuantity($product)]]);
+            return new JsonResponse([
+                'type' => 'success',
+                'data' => ['quantity' => $basketManager->countProductQuantity($product)],
+            ]);
         } else {
             $request->getSession()->set('bypassBasketEvents', true);
 
@@ -96,7 +99,10 @@ class BasketController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(['type' => 'success', 'data' => ['quantity' => $basketManager->countProductQuantity($product)]]);
+            return new JsonResponse([
+                'type' => 'success',
+                'data' => ['quantity' => $basketManager->countProductQuantity($product)],
+            ]);
         }
 
         $request->getSession()->set('bypassBasketEvents', true);
@@ -105,13 +111,12 @@ class BasketController extends Controller
     }
 
     /**
+     * @Route(name="basket_delete_product", path="basket/delete/{id}")
+     *
      * @param BaseProduct $product
      * @param Request     $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @Route(name="basket_delete_product", path="basket/delete/{id}")
-     *
      * TODO implement ajax handler
      */
     public function deleteAction(BaseProduct $product, Request $request)

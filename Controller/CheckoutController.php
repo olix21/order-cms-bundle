@@ -13,25 +13,24 @@ use Dywee\OrderCMSBundle\DyweeOrderCMSEvent;
 use Dywee\OrderCMSBundle\Event\CheckoutStatEvent;
 use Dywee\OrderCMSBundle\Form\ShippingAddressType;
 use Dywee\OrderCMSBundle\Form\BillingAddressType;
-use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class CheckoutController extends Controller
 {
     /**
+     * @Route(name="checkout_billing", path="checkout/billing", defaults={"address": null})
+     * @Route(name="checkout_billing_address_selected", path="checkout/billing/address/{id}")
+     *
      * @param Address|null $address
      * @param Request      $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     *
-     * @Route(name="checkout_billing", path="checkout/billing", defaults={"address": null})
-     * @Route(name="checkout_billing_address_selected", path="checkout/billing/address/{id}")
      */
     public function billingAction(Address $address = null, Request $request)
     {
@@ -91,11 +90,11 @@ class CheckoutController extends Controller
     }
 
     /**
+     * @Route(name="checkout_shipping", path="checkout/shipping")
+     *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     *
-     * @Route(name="checkout_shipping", path="checkout/shipping")
      */
     public function shippingAction(Request $request)
     {
@@ -149,7 +148,6 @@ class CheckoutController extends Controller
 
 
     /**
-     *
      * @Route(name="checkout_shipping_third_person", path="checkout/shipping/third")
      */
     public function thirdPersonShippingAction(Request $request)
@@ -319,20 +317,55 @@ class CheckoutController extends Controller
 
             $data = ['order' => $order];
 
+            //TODO a bouger dans une gestion "shipment"
+            /*if($order->getDeliveryMethod() == '24R')
+            {
+                $client = new \nusoap_client('http://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL', true);
+
+                $explode = explode('-', $order->getDeliveryInfo());
+
+                $params = array(
+                    'Enseigne' => "BEBLCBLC",
+                    'Num' => $explode[1],
+                    'Pays' => $explode[0]
+                );
+
+                $security = '';
+                foreach($params as $param)
+                    $security .= $param;
+                $security .= 'xgG1mpth';
+
+                $params['Security'] = strtoupper(md5($security));
+
+                $result = $client->call('WSI2_AdressePointRelais', $params, 'http://www.mondialrelay.fr/webservice/', 'http://www.mondialrelay.fr/webservice/WSI2_AdressePointRelais');
+
+                if($result['WSI2_AdressePointRelaisResult']['STAT'] == 0)
+                {
+                    $data['relais'] = array(
+                        'address1'  => $result['WSI2_AdressePointRelaisResult']['LgAdr1'],
+                        'address2'  => $result['WSI2_AdressePointRelaisResult']['LgAdr3'],
+                        'zip'       => $result['WSI2_AdressePointRelaisResult']['CP'],
+                        'cityString' => $result['WSI2_AdressePointRelaisResult']['Ville']
+                    );
+                }
+                else throw $this->createNotFoundException('Erreur dans la recherche du point relais');
+            }*/
+
             $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_RECAP);
 
             $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_RECAP, $checkoutStatEvent);
 
             return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
+        } else {
+            $this->addFlash('warning', 'votre session a expirée');
+
+            return $this->redirectToRoute('basket_view');
         }
-
-        $this->addFlash('warning', 'votre session a expirée');
-
-        return $this->redirectToRoute('basket_view');
     }
 
     /**
-     * @Get(path="checkout/confirmation", name="checkout_confirmation")
+     * @Route(path="checkout/confirmation", name="checkout_confirmation")
+     *
      * @param Request $request
      *
      * @return Response
@@ -351,7 +384,8 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @Get(path="checkout/fail", name="checkout_fail")
+     * @Route(path="checkout/fail", name="checkout_fail")
+     *
      * @param Request $request
      *
      * @return Response
@@ -362,9 +396,9 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
      * @Route(name="paypal_checkout", path="paypal/checkout")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     /*
     public function paypalCheckoutAction(Request $request)

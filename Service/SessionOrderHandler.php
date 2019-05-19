@@ -2,37 +2,34 @@
 
 namespace Dywee\OrderCMSBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class SessionOrderHandler
 {
-    /** @var SessionInterface */
+    /** @var Session */
     private $session;
 
-    /** @var EntityManagerInterface */
+    /** @var EntityManager */
     private $em;
 
-    /** @var TokenStorageInterface */
+    /** @var TokenStorage */
     private $tokenStorage;
 
     /**
      * SessionOrderHandler constructor.
      *
-     * @param EntityManagerInterface $em
-     * @param SessionInterface       $session
-     * @param TokenStorageInterface  $tokenStorage
+     * @param EntityManager $em
+     * @param Session       $session
+     * @param TokenStorage  $tokenStorage
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        SessionInterface $session,
-        TokenStorageInterface $tokenStorage
-    ) {
+    public function __construct(EntityManager $em, Session $session, TokenStorage $tokenStorage)
+    {
         $this->em = $em;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;

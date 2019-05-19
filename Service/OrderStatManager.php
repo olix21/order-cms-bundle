@@ -2,7 +2,7 @@
 
 namespace Dywee\OrderCMSBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Dywee\OrderCMSBundle\Entity\OrderStat;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class OrderStatManager
 {
-    /** @var EntityManagerInterface  */
+    /** @var EntityManager  */
     private $em;
 
     /** @var SessionStatManager  */
@@ -20,10 +20,10 @@ class OrderStatManager
     /**
      * OrderStatManager constructor.
      *
-     * @param EntityManagerInterface      $entityManager
+     * @param EntityManager      $entityManager
      * @param SessionStatManager $sessionManager
      */
-    public function __construct(EntityManagerInterface $entityManager, SessionStatManager $sessionManager)
+    public function __construct(EntityManager $entityManager, SessionStatManager $sessionManager)
     {
         $this->em = $entityManager;
         $this->sessionManager = $sessionManager;
