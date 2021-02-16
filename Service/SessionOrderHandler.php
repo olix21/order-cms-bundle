@@ -3,36 +3,31 @@
 namespace Dywee\OrderCMSBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\OrderBundle\Entity\BaseOrder;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class SessionOrderHandler
 {
-    /** @var Session */
-    private $session;
+    private SessionInterface $session;
+    private EntityManagerInterface $em;
+    private Security $security;
 
-    /** @var EntityManager */
-    private $em;
-
-    /** @var TokenStorage */
-    private $tokenStorage;
-
-    /**
-     * SessionOrderHandler constructor.
-     *
-     * @param EntityManager $em
-     * @param Session       $session
-     * @param TokenStorage  $tokenStorage
-     */
-    public function __construct(EntityManager $em, Session $session, TokenStorage $tokenStorage)
-    {
+    public function __construct(
+        EntityManagerInterface $em, 
+        SessionInterface $session, 
+        Security $security
+    ) {
         $this->em = $em;
         $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
     }
 
     /**
@@ -44,7 +39,7 @@ class SessionOrderHandler
 
         if ($order) {
             // TODO is it really needed?
-            $order = $this->em->getRepository('DyweeOrderBundle:BaseOrder')->find($order->getId());
+            $order = $this->em->getRepository(BaseOrder::class)->find($order->getId());
 
             if ($order) {
                 return $order;
@@ -86,8 +81,8 @@ class SessionOrderHandler
      */
     public function tryToAddCustomer(BaseOrderInterface $baseOrder)
     {
-        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() && $this->tokenStorage->getToken()->getUser() instanceof CustomerInterface) {
-            $baseOrder->setCustomer($this->tokenStorage->getToken()->getUser());
+        if ($this->security->getUser() instanceof CustomerInterface) {
+            $baseOrder->setCustomer($this->security->getUser());
 
             return true;
         }

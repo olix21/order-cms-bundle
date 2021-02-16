@@ -13,10 +13,10 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": "^8.0",
     "dywee/order-bundle": "*",
-    "stof/doctrine-extensions-bundle": "^1.2",
-    "vich/uploader-bundle": "^1.0"
+    "stof/doctrine-extensions-bundle": "^1.5",
+    "vich/uploader-bundle": "^1.16"
   },
   "autoload": {
     "psr-4": {

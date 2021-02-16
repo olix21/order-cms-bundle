@@ -13,6 +13,7 @@ use Dywee\OrderCMSBundle\DyweeOrderCMSEvent;
 use Dywee\OrderCMSBundle\Event\CheckoutStatEvent;
 use Dywee\OrderCMSBundle\Form\ShippingAddressType;
 use Dywee\OrderCMSBundle\Form\BillingAddressType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class CheckoutController extends Controller
+class CheckoutController extends AbstractController
 {
     /**
      * @Route(name="checkout_billing", path="checkout/billing", defaults={"address": null})
@@ -269,7 +270,7 @@ class CheckoutController extends Controller
 
         $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS);
 
-        $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS, $checkoutStatEvent);
+        $this->get('event_dispatcher')->dispatch($checkoutStatEvent, DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS);
 
         return $this->render('DyweeOrderCMSBundle:Shipping:shipping_methods.html.twig', [
             'order' => $order,
@@ -352,7 +353,7 @@ class CheckoutController extends Controller
 
             $checkoutStatEvent = new CheckoutStatEvent($order, $this->getUser(), DyweeOrderCMSEvent::DISPLAY_RECAP);
 
-            $this->get('event_dispatcher')->dispatch(DyweeOrderCMSEvent::DISPLAY_RECAP, $checkoutStatEvent);
+            $this->get('event_dispatcher')->dispatch($checkoutStatEvent, DyweeOrderCMSEvent::DISPLAY_RECAP);
 
             return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
         } else {

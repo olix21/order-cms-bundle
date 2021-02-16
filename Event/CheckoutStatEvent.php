@@ -4,7 +4,7 @@ namespace Dywee\OrderCMSBundle\Event;
 
 use Dywee\CoreBundle\Model\CustomerInterface;
 use Dywee\OrderBundle\Entity\BaseOrderInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class CheckoutStatEvent extends Event
 {

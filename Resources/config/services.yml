@@ -52,7 +52,7 @@ services:
 
     dywee_order_cms.order_session_handler:
         class: Dywee\OrderCMSBundle\Service\SessionOrderHandler
-        arguments: [ '@doctrine.orm.entity_manager', '@session', '@security.token_storage']
+        arguments: [ '@doctrine.orm.entity_manager', '@session', '@security.helper']
 
 
     dywee_order_cms.navbar_listener:

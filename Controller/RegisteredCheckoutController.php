@@ -3,12 +3,13 @@
 namespace Dywee\OrderCMSBundle\Controller;
 
 use Dywee\AddressBundle\Entity\Address;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class RegisteredCheckoutController extends Controller
+class RegisteredCheckoutController extends AbstractController
 {
     /**
      * @Route(name="address_picker_check", path="checkout/billing/address/{id}")

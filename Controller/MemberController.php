@@ -4,10 +4,11 @@ namespace Dywee\OrderCMSBundle\Controller;
 
 
 use Dywee\OrderBundle\Entity\BaseOrder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MemberController extends Controller
+class MemberController extends AbstractController
 {
     /**
      * @return \Symfony\Component\HttpFoundation\Response

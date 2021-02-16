@@ -2,12 +2,13 @@
 
 namespace Dywee\OrderCMSBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class StatController extends Controller
+class StatController extends AbstractController
 {
     /**
      * @Route(name="order_cms_stat", path="admin/order/stat")
