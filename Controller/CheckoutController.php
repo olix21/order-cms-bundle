@@ -183,14 +183,19 @@ class CheckoutController extends AbstractController
                 'second_options'  => ['label' => 'Confirmer Adresse e-mail']
             ])
                 ->add('other', 'text', ['required' => false]);
+            
+            if (isset($formHome)) {
+                $formHome->handleRequest($request);
+                if ($formHome->isSubmitted() && $formHome->isValid()) {
+                    $data = $formHome->getData();
 
-            if (isset($formHome) && $formHome->handleRequest($request)->isValid()) {
-                $data = $formHome->getData();
+                    $order->setShippingAddress($shippingAddress);
+                    $order->setDeliveryMethod('HOM');
 
-                $order->setShippingAddress($shippingAddress);
-                $order->setDeliveryMethod('HOM');
-
-                return $this->step4Action($order, 'HomMethod');
+                    return $this->step4Action($order, 'HomMethod');
+                } else {
+                    $data['home'] = $formHome->createView();
+                }
             } else {
                 $data['home'] = $formHome->createView();
             }
@@ -210,7 +215,8 @@ class CheckoutController extends AbstractController
                 ->add('mrSave', 'submit')
                 ->getForm();
 
-            if ($formMR->handleRequest($request)->isValid()) {
+            $formMR->handleRequest($request);
+            if ($formMR->isSubmitted() && $formMR->isValid()) {
                 $cr = $em->getRepository('DyweeAddressBundle:Country');
                 $data = $formMR->getData();
 
