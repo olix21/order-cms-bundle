@@ -1,4 +1,4 @@
-{% extends 'DyweeOrderCMSBundle::userAdmin.html.twig' %}
+{% extends '@DyweeOrderCMSBundle/userAdmin.html.twig' %}
 
 {% block body %}
 
@@ -7,15 +7,15 @@
     </div>
     <div class="row">
         <div class="col-lg-7 col-md-12">
-            {% include 'DyweeOrderBundle:Fragment:overview_panel.html.twig' %}
+            {% include '@DyweeOrderBundle/Fragment/overview_panel.html.twig' %}
         </div>
         <div class="col-lg-5 col-md-12">
-            {% include 'DyweeOrderBundle:Fragment:shipments_panel.html.twig' %}
+            {% include '@DyweeOrderBundle/Fragment/shipments_panel.html.twig' %}
         </div>
     </div>
 
     {% if not order.shippingMessage == '' %}
-        {% include 'DyweeOrderBundle:Fragment:shipping_message_panel.html.twig' %}
+        {% include '@DyweeOrderBundle/Fragment/shipping_message_panel.html.twig' %}
     {% endif %}
 
     <div class="row">
@@ -24,7 +24,7 @@
                 <div class="panel-heading"><h3 class="panel-title">Adresse de Facturation</h3></div>
                 <div class="panel-body">
                     {% if order.billingAddress is not null %}
-                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.billingAddress} %}
+                        {% include '@DyweeAddressBundle/Address/view_wrapped.html.twig' with {address: order.billingAddress} %}
                     {% else %}
                         {{ 'address.notDefined'|trans }}
                     {% endif %}
@@ -36,7 +36,7 @@
                 <div class="panel-heading"><h3 class="panel-title">Adresse de livraison</h3></div>
                 <div class="panel-body">
                     {% if order.shippingAddress is not null %}
-                        {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' with {address: order.shippingAddress} %}
+                        {% include '@DyweeAddressBundle/Address/view_wrapped.html.twig' with {address: order.shippingAddress} %}
                     {% else %}
                         {{ 'address.notDefined'|trans }}
                     {% endif %}

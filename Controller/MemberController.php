@@ -19,7 +19,7 @@ class MemberController extends AbstractController
     {
         $orders = $this->getDoctrine()->getRepository(BaseOrder::class)->findByCustomer($this->getUser());
 
-        return $this->render('DyweeOrderCMSBundle:User:list.html.twig', ['orders' => $orders]);
+        return $this->render('@DyweeOrderCMSBundle/User/list.html.twig', ['orders' => $orders]);
     }
 
     /**
@@ -33,6 +33,6 @@ class MemberController extends AbstractController
     {
         // TODO Voter
 
-        return $this->render('DyweeOrderCMSBundle:User:view.html.twig', ['order' => $order]);
+        return $this->render('@DyweeOrderCMSBundle/User/view.html.twig', ['order' => $order]);
     }
 }

@@ -15,7 +15,7 @@ class StatController extends AbstractController
      */
     public function statAction()
     {
-        return $this->render('DyweeOrderCMSBundle:Stat:dashboard.html.twig', array(
+        return $this->render('@DyweeOrderCMSBundle/Stat/dashboard.html.twig', array(
             'stats' => $this->get('dywee_order_cms.stat_manager')->getStatsForTimeRange()
         ));
     }

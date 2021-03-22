@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Basket\recap.html.twig #}
 
-{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends '@DyweeOrderCMSBundle/layout.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -19,7 +19,7 @@
 
 {% block body %}
 
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    {% include '@DyweeOrderCMSBundle/Checkout/checkout-wizard.html.twig' %}
 
     <h1>{{ 'checkout.recap'|trans }}</h1>
     <div class="card">
@@ -80,7 +80,7 @@
                 <div class="card-header">{{ 'checkout.billing_address'|trans|capitalize }}</div>
                 <div class="card-body">
                     {% set address = order.billingAddress %}
-                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                    {% include '@DyweeAddressBundle/Address/view_wrapped.html.twig' %}
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
                 <div class="card-header">{{ 'checkout.shipping_address'|trans|capitalize }}</div>
                 <div class="card-body">
                     {% set address = order.shippingAddress %}
-                    {% include 'DyweeAddressBundle:Address:view_wrapped.html.twig' %}
+                    {% include '@DyweeAddressBundle/Address/view_wrapped.html.twig' %}
                 </div>
             </div>
         </div>

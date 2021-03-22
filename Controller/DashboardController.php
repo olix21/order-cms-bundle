@@ -18,7 +18,7 @@ class DashboardController extends AbstractController
 {
     public function statAction()
     {
-        return $this->render('DyweeOrderCMSBundle:Stat:overview.html.twig', array(
+        return $this->render('@DyweeOrderCMSBundle/Stat/overview.html.twig', array(
             'stats' => $this->get('dywee_order_cms.stat_manager')->getStatsForTimeRange(new \DateTime('last week'))
         ));
     }

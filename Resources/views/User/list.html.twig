@@ -1,4 +1,4 @@
-{% extends 'DyweeOrderCMSBundle::userAdmin.html.twig' %}
+{% extends '@DyweeOrderCMSBundle/userAdmin.html.twig' %}
 
 {% block body %}
     <h1>Administration</h1>
@@ -8,7 +8,7 @@
                 <div class="panel-heading">
                     <h1 class="panel-title">Liste de vos commandes</h1>
                 </div>
-                {% include 'DyweeOrderCMSBundle:User:table.html.twig' %}
+                {% include '@DyweeOrderCMSBundle/User/table.html.twig' %}
             </div>
         </div>
     </div>

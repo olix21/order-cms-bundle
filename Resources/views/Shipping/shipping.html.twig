@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Basket\shipping.html.twig #}
 
-{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends '@DyweeOrderCMSBundle/layout.html.twig' %}
 
 {% block metaTitle %}
     Adresse de facturation {{ parent() }}
@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    {% include '@DyweeOrderCMSBundle/Checkout/checkout-wizard.html.twig' %}
 
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -22,7 +22,7 @@
                 <div class="panel-body">
                     {% if orderConnexionPermission == 'anon' or orderConnexionPermission == 'both' %}
                         {% if orderConnexionPermission == 'both' %}<h5>Une adresse non enregistrée</h5>{% endif %}
-                        {% include 'DyweeOrderCMSBundle:Shipping:shipping-home.html.twig' %}
+                        {% include '@DyweeOrderCMSBundle/Shipping/shipping-home.html.twig' %}
                     {% endif %}
                 </div>
             </div>

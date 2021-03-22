@@ -17,8 +17,8 @@ services:
             - { name: kernel.event_subscriber }
 
     dywee_order_cms.member_sidebar_handler:
-            class: Dywee\OrderCMSBundle\Service\MemberSidebarHandler
-            arguments: [ '@router' ]
+        class: Dywee\OrderCMSBundle\Service\MemberSidebarHandler
+        arguments: [ '@router' ]
 
     dywee_order_cms.member_sidebar_listener:
         class: Dywee\OrderCMSBundle\Listener\MemberSidebarBuilderListener

@@ -133,7 +133,7 @@ class CheckoutController extends AbstractController
 
             $this->get('dywee_order_cms.stat_manager')->createStat($order, DyweeOrderCMSEvent::DISPLAY_SHIPPING);
 
-            return $this->render('DyweeOrderCMSBundle:Shipping:shipping.html.twig', [
+            return $this->render('@DyweeOrderCMSBundle/Shipping/shipping.html.twig', [
                 'home' => $form->createView()
             ]);
         }
@@ -229,7 +229,7 @@ class CheckoutController extends AbstractController
         }
         $data['step'] = 3;
 
-        return $this->render('DyweeOrderBundle:Basket:shipping.html.twig', $data);
+        return $this->render('@DyweeOrderBundle/Basket/shipping.html.twig', $data);
     }
 
     /**
@@ -272,7 +272,7 @@ class CheckoutController extends AbstractController
 
         $this->get('event_dispatcher')->dispatch($checkoutStatEvent, DyweeOrderCMSEvent::DISPLAY_SHIPPING_METHODS);
 
-        return $this->render('DyweeOrderCMSBundle:Shipping:shipping_methods.html.twig', [
+        return $this->render('@DyweeOrderCMSBundle/Shipping/shipping_methods.html.twig', [
             'order' => $order,
             'form'  => $form->createView()
         ]);
@@ -355,7 +355,7 @@ class CheckoutController extends AbstractController
 
             $this->get('event_dispatcher')->dispatch($checkoutStatEvent, DyweeOrderCMSEvent::DISPLAY_RECAP);
 
-            return $this->render('DyweeOrderCMSBundle:Checkout:recap.html.twig', $data);
+            return $this->render('@DyweeOrderCMSBundle/Checkout/recap.html.twig', $data);
         } else {
             $this->addFlash('warning', 'votre session a expirée');
 
@@ -378,7 +378,7 @@ class CheckoutController extends AbstractController
             return $this->redirectToRoute('checkout_fail');
         }
 
-        return $this->render('DyweeOrderCMSBundle:Checkout:success.html.twig', [
+        return $this->render('@DyweeOrderCMSBundle/Checkout/success.html.twig', [
             'order' => $order
         ]);
     }

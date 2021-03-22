@@ -1,4 +1,4 @@
-{%  extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends '@DyweeOrderCMSBundle/layout.html.twig' %}
 
 {% block body %}
     <div class="col-md-8 col-md-offset-2 m-t-lg">
@@ -13,7 +13,7 @@
 
                 <p>Votre référence de commande est le {{ order.reference }}</p>
 
-                {% include 'DyweeOrderCMSBundle:Checkout:success_links.html.twig' %}
+                {% include '@DyweeOrderCMSBundle/Checkout/success_links.html.twig' %}
 
             </div>
             <div class="card-footer">

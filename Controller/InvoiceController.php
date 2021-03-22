@@ -28,7 +28,7 @@ class InvoiceController extends AbstractController
     {
         //TODO voters
 
-        return $this->render('DyweeOrderCMSBundle:Order:invoice.html.twig', [
+        return $this->render('@DyweeOrderCMSBundle/Order/invoice.html.twig', [
             'order' => $order
         ]);
     }

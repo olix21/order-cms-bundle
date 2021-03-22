@@ -37,7 +37,7 @@ class BasketController extends AbstractController
             }
         }
 
-        return $this->render('DyweeOrderCMSBundle:Basket:basket.html.twig', ['order' => $order]);
+        return $this->render('@DyweeOrderCMSBundle/Basket/basket.html.twig', ['order' => $order]);
     }
 
     /**
@@ -49,7 +49,7 @@ class BasketController extends AbstractController
     {
         $order = $this->get('dywee_order_cms.order_session_handler')->getOrderFromSession();
 
-        return $this->render('DyweeOrderCMSBundle:Basket:inMenu.html.twig', ['order' => $order]);
+        return $this->render('@DyweeOrderCMSBundle/Basket/inMenu.html.twig', ['order' => $order]);
     }
 
 

@@ -24,9 +24,9 @@ class RegisteredCheckoutController extends AbstractController
         $addresses = $addressRepository->findByUser($this->getUser());
 
         if (count($addresses) > 0) {
-            return $this->render('DyweeOrderCMSBundle:Address:picker.html.twig', ['addresses' => $addresses]);
+            return $this->render('@DyweeOrderCMSBundle/Address/picker.html.twig', ['addresses' => $addresses]);
         }
 
-        return $this->render('DyweeOrderCMSBundle:Address:picker.html.twig', ['form' => $this->get('dywee_address.form_handler')->createForm()->createView(), 'addresses' => $addresses]);
+        return $this->render('@DyweeOrderCMSBundle/Address/picker.html.twig', ['form' => $this->get('dywee_address.form_handler')->createForm()->createView(), 'addresses' => $addresses]);
     }
 }

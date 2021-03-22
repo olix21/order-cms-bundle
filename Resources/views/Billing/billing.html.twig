@@ -1,6 +1,6 @@
 {# Dywee\OrderBundle\Resources\View\Basket\facturation.html.twig #}
 
-{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends '@DyweeOrderCMSBundle/layout.html.twig' %}
 
 {% block metaTitle %}
     {{ 'Adresse de facturation'|trans }} {{ parent() }}
@@ -17,8 +17,8 @@
 {% endspaceless %}{% endset %}
 
 {% block body %}
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
-    
+    {% include '@DyweeOrderCMSBundle/Checkout/checkout-wizard.html.twig' %}
+
     <div class="row">
         {% if orderConnexionPermission == 'registered' or orderConnexionPermission == 'both' %}
             <div class="{{ columnClass }}">
@@ -28,9 +28,9 @@
                     </div>
                     <div class="card-body">
                         {% if app.user %}
-                            {{ render(controller('DyweeOrderCMSBundle:RegisteredCheckout:addressPicker')) }}
+                            {{ render(controller('Dywee\\OrderCMSBundle\\Controller\\RegisteredCheckoutController::addressPickerAction')) }}
                         {% else %}
-                            {{ render(controller('FOSUserBundle:Security:login')) }}
+{#                            {{ render(controller('FOSUserBundle:Security:login')) }}#}
                         {% endif %}
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         {{ 'Commander sans créer de compte'|trans }}
                     </div>
                     <div class="card-body">
-                        {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
+                        {% include '@DyweeOrderCMSBundle/Billing/billing_form.html.twig' %}
                     </div>
                 </div>
             </div>

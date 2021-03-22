@@ -1,4 +1,4 @@
-{% extends "DyweeOrderCMSBundle::layout.html.twig" %}
+{% extends '@DyweeOrderCMSBundle/layout.html.twig' %}
 
 {% block metaTitle %}
     {{ 'basket.metaTitle'|trans }} {{ parent() }}
@@ -7,7 +7,7 @@
 {% set current_checkout_step = 1 %}
 
 {% block body %}
-    {% include 'DyweeOrderCMSBundle:Checkout:checkout-wizard.html.twig' %}
+    {% include '@DyweeOrderCMSBundle/Checkout/checkout-wizard.html.twig' %}
 
     <div class="row">
         <div class="col-lg-9">

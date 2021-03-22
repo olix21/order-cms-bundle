@@ -6,11 +6,11 @@
 
 <div class="row">
     {% for address in addresses %}
-        {% include 'DyweeOrderCMSBundle:Address:pickerElement.html.twig' %}
+        {% include '@DyweeOrderCMSBundle/Address/pickerElement.html.twig' %}
     {% else %}
         {# TODO enable form to handle new address #}
         <div class="col-md-12">
-            {% include 'DyweeOrderCMSBundle:Billing:billing_form.html.twig' %}
+            {% include '@DyweeOrderCMSBundle/Billing/billing_form.html.twig' %}
         </div>
     {% endfor %}
 </div>
